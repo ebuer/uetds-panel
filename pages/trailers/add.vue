@@ -86,7 +86,6 @@
 
           self.resetError()
 
-
           const valid = this.$refs.pageForm.validate();
 
           if (valid) {
