@@ -272,7 +272,7 @@
             to: '/cars'
           },
           {
-            icon: 'mdi-card-account-details',
+            icon: 'mdi-truck-trailer',
             title: 'Dorseler',
             to: '/trailers'
           },
@@ -282,7 +282,7 @@
             to: '/drivers'
           },
           {
-            icon: 'mdi-card-account-details',
+            icon: 'mdi-briefcase-download',
             title: 'Yük Temin Noktası',
             to: '/senders'
           }
