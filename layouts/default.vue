@@ -285,6 +285,11 @@
             icon: 'mdi-briefcase-download',
             title: 'Yük Temin Noktası',
             to: '/senders'
+          },
+          {
+            icon: 'mdi-map-check',
+            title: 'Seferler',
+            to: '/expeditions'
           }
         ],
         miniVariant: false,

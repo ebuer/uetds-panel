@@ -19,7 +19,6 @@
               label="Plaka"
               placeholder="00 TR 0000"
               required
-              v-mask="'## AA ####'"
             ></v-text-field>
           </div>
 

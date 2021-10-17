@@ -187,8 +187,8 @@
           .then(res => {
             const data = res.data.data[0];
 
-            const axiosrequest1 = self.$axios.post('province');
-            const axiosrequest2 = self.$axios.post('district/' + data.province_code);
+            const axiosrequest1 = self.$axios.post('provinces');
+            const axiosrequest2 = self.$axios.post('districts/' + data.province_code);
 
             self.$axios.all([
               axiosrequest1,
@@ -208,7 +208,7 @@
       setDistrict(value) {
         const self = this;
         self.selectItems.districtLoader = true
-        self.$axios.post('district/' + value)
+        self.$axios.post('districts/' + value)
           .then(res => {
             self.selectItems.districtLoader = false
             self.selectItems.districts = res.data.data

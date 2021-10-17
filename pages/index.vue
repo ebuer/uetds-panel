@@ -61,7 +61,7 @@
     <v-row justify="center" align="center">
 
       <v-col cols="4">
-        <v-card class="add-big-icon-btn" @click="goTo('/cars')">
+        <v-card class="add-big-icon-btn" @click="goTo('/expeditions/add')">
           <div class="text-center">
             <div>
               <v-icon style="font-size: 120px">mdi-plus</v-icon>
@@ -87,7 +87,7 @@
             src: 'https://cdn.vuetifyjs.com/images/cards/foster.jpg',
             title: 'Araçlar',
             icon: 'mdi-truck-fast',
-            count: '14',
+            count: '0',
             toList: '/cars',
             toAdd: '/cars/add'
           },
@@ -96,7 +96,7 @@
             src: 'https://cdn.vuetifyjs.com/images/cards/halcyon.png',
             icon: 'mdi-account-supervisor-outline',
             title: 'Müşteriler',
-            count: '10',
+            count: '0',
             toList: '/customers',
             toAdd: '/customers/add'
           },
@@ -105,7 +105,7 @@
             src: 'https://cdn.vuetifyjs.com/images/cards/halcyon.png',
             icon: 'mdi-account-circle',
             title: 'Sürücüler',
-            count: '22',
+            count: '0',
             toList: '/drivers',
             toAdd: '/drivers/add'
           },
@@ -113,7 +113,16 @@
       }
     },
     created() {
-      this.$axios.get('http://test.gold-trace.com/profile')
+      const self = this;
+      // TODO handle
+      this.$axios.get('profile')
+      this.$axios.get('get-statistics')
+        .then(res => {
+          const data = res.data;
+          self.items[0].count = data['Total Cars'];
+          self.items[1].count = data['Total Customers'];
+          self.items[2].count = data['Total Drivers'];
+        })
     },
     methods: {
       goTo(path) {

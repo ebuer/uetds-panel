@@ -216,58 +216,69 @@
 
     <!--    delete dialog end-->
 
-
   </div>
 </template>
 
 <script>
   export default {
-    name: 'senders',
+    name: 'drivers',
     data() {
       return {
         moduleInfo: {
-          title: 'Yük Temin Noktası',
-          createRoute: '/senders/add',
-          editRoute: '/senders/',
-          createText: 'Yük Temin Noktası Ekle'
+          title: 'Seferler',
+          createRoute: '/expeditions/add',
+          editRoute: '/expeditions/',
+          createText: 'Sefer Oluştur'
         },
         deleteDialog: {
           open: false,
           deleteItem: null,
           loader: false,
           options: {
-            endpoint: 'senders/delete',
+            endpoint: 'expeditions/delete',
             endpointVal: 'id',
             title: 'Silme İşlemi',
-            text: '{title} İsimli Temin Noktasını Silmek istediğinize emin misiniz?',
+            text: '{id} Nolu Seferi Silmek istediğinize emin misiniz?',
             showText: '',
-            successText: '{title} İsimli Temin Noktası Silinmiştir',
+            successText: '{id} Nolu Sefer Silinmiştir',
           }
         },
         detailDialog: {
           open: false,
           options: [
             {
-              title: 'Ünvan',
-              value: 'title'
+              title: 'No',
+              value: 'id'
             },
             {
-              title: 'Vergi Numarası',
-              value: 'tax_id_no'
+              title: 'Sürücü',
+              value: 'driver_1'
             },
             {
-              title: 'İl',
-              value: 'province'
+              title: '2.Sürücü',
+              value: 'driver_2'
             },
             {
-              title: 'İlçe',
-              value: 'district'
-            }
+              title: 'Sefer Başlangıç Tarihi',
+              value: 'expedition_start_date'
+            },
+            {
+              title: 'Sefer Başlangıç Saati',
+              value: 'expedition_start_time'
+            },
+            {
+              title: 'Sefer Bitiş Tarihi',
+              value: 'expedition_end_date'
+            },
+            {
+              title: 'Sefer Bitiş Saati',
+              value: 'expedition_end_time'
+            },
           ],
           item: null
         },
         table: {
-          endpoint: 'senders',
+          endpoint: 'expeditions',
           pagination: {
             current: 1,
             pagLength: 0,
@@ -277,10 +288,10 @@
           loader: true,
           headers: [
             {text: 'Aksiyon', value: 'action', width: '15%'},
-            {text: 'Ünvan', value: 'title'},
-            {text: 'Vergi Numarası', value: 'tax_id_no'},
-            {text: 'İl', value: 'province'},
-            {text: 'İlçe', value: 'district'},
+            {text: 'No', value: 'id'},
+            {text: 'Sürücü', value: 'driver_1'},
+            {text: 'Plaka', value: 'plaque_1'},
+            {text: 'Sefer Bitiş', value: 'expedition_end_date'},
           ],
           items: []
         },

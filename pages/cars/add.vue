@@ -14,8 +14,17 @@
               label="Plaka"
               placeholder="00 TR 0000"
               required
-              v-mask="'## AA ####'"
             ></v-text-field>
+<!--            <v-text-field-->
+<!--              class="app-form-item"-->
+<!--              outlined-->
+<!--              v-model="form.plaque"-->
+<!--              :rules="rules.required"-->
+<!--              label="Plaka"-->
+<!--              placeholder="00 TR 0000"-->
+<!--              required-->
+<!--              v-mask="'## AA ####'"-->
+<!--            ></v-text-field>-->
           </div>
 
 

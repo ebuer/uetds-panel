@@ -254,6 +254,10 @@
             {
               title: 'TC',
               value: 'tc_no'
+            },
+            {
+              title: 'Şifre',
+              value: 'password'
             }
           ],
           item: null

@@ -31,6 +31,23 @@
             ></v-text-field>
           </div>
 
+
+          <div class="app-form-group">
+            <v-text-field
+              class="app-form-item"
+              append-icon="mdi-map-marker"
+              @click:append="generatePassword()"
+              hint="Sürücünün siteme giriş yapabilmesi için şifre girin"
+              persistent-hint
+              outlined
+              v-model="form.password"
+              :rules="rules.password"
+              label="Şifre"
+              required
+              v-on:keyup.enter="submit()"
+            ></v-text-field>
+          </div>
+
           <div class="app-form-submit">
             <v-btn @click="submit()"
                    color="primary"
@@ -81,6 +98,7 @@
         form: {
           tc_no: '',
           name_surname: '',
+          password: '',
         },
         rules: {
           required: [
@@ -89,11 +107,24 @@
           tc_no: [
             v => !!v.trim() || 'Alan Zorunludur',
             v => v.length === 11 || '11 Haneli Alan giriniz',
+          ],
+          password: [
+            v => !!v.trim() || 'Alan Zorunludur',
+            v => v.length > 5 || 'En az 6 karakter giriniz',
           ]
         },
       }
     },
     methods: {
+      generatePassword() {
+        var length = 6,
+          charset = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789",
+          retVal = "";
+        for (var i = 0, n = charset.length; i < length; ++i) {
+          retVal += charset.charAt(Math.floor(Math.random() * n));
+        }
+        this.form.password =  retVal;
+      },
       resetError() {
         const self = this;
         self.error = [];
