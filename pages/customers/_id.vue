@@ -197,7 +197,11 @@
               self.selectItems.provinces = provinceRes.data.data
               self.selectItems.districts = districtRes.data.data
               self.moduleInfo.title = self.moduleInfo.title + ' - ' + data[self.moduleInfo.titleShowVal]
-              self.form = data
+
+              Object.keys(data).forEach(itemKey => {
+                self.form[itemKey] = data[itemKey] === null ? '' : data[itemKey]
+              });
+              // self.form = data
               self.getLoader = false
             }));
 

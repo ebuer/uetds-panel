@@ -35,7 +35,7 @@
           <div class="app-form-group">
             <v-text-field
               class="app-form-item"
-              append-icon="mdi-map-marker"
+              append-icon="mdi-lock-reset"
               @click:append="generatePassword()"
               hint="Sürücünün siteme giriş yapabilmesi için şifre girin"
               persistent-hint

@@ -205,6 +205,17 @@
     </v-app-bar>
     <v-main>
       <v-container>
+        <v-alert
+          v-if="userInfoStatus !== null && (userInfoStatus === 0)"
+          style="margin: 10px 0 0 0;"
+          dense
+          outlined
+          type="error"
+        >
+          UETDS bildirimini yapabilmek için <strong>E-Devlet</strong> bilgilerinizi
+          <NuxtLink to="/profile" style="color: red">buradan</NuxtLink>
+          güncellemeniz gerekiyor,
+        </v-alert>
         <Nuxt/>
       </v-container>
     </v-main>
@@ -295,7 +306,8 @@
         miniVariant: false,
         right: true,
         rightDrawer: false,
-        title: 'Logistic'
+        title: 'Logistic',
+        userInfoStatus: null
       }
     },
     computed: {
@@ -319,6 +331,14 @@
     },
     mounted() {
       console.log('logged in',)
+
+      this.$axios.post('check-user-information')
+        .then(res => {
+          // Eksiksiz ise status : 1
+          // Eksik ise status : 0
+          this.userInfoStatus = res.data.status
+        })
+
 
       const info = this.$userInfo()
 

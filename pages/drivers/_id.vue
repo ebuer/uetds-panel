@@ -41,7 +41,7 @@
           <div class="app-form-group">
             <v-text-field
               class="app-form-item"
-              append-icon="mdi-map-marker"
+              append-icon="mdi-lock-reset"
               @click:append="generatePassword()"
               hint="Sürücünün siteme giriş yapabilmesi için şifre girin"
               persistent-hint
@@ -135,9 +135,12 @@
         self.$axios.get(self.moduleInfo.getByIdEndpoint + '/' + self.$route.params.id)
           .then(res => {
             const data = res.data.data[0];
+            Object.keys(data).forEach(itemKey => {
+              self.form[itemKey] = data[itemKey] === null ? '' : data[itemKey]
+            });
 
             self.moduleInfo.title = self.moduleInfo.title + ' - ' + data[self.moduleInfo.titleShowVal]
-            self.form = data
+            // self.form = data
             self.getLoader = false
 
           })

@@ -232,6 +232,8 @@
               .then((res) => {
                 self.buttonLoader = false
                 setTimeout(() => self.loginSubmitting = false, 500)
+
+                console.log('AFDTER LKIOGİNNNN')
               })
               .catch(err => {
                 self.error.login.push('Bilgileriniz uyuşmuyor.')

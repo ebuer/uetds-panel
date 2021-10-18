@@ -1,5 +1,5 @@
 <template>
-  <div class="app-page index">
+  <div class="app-page index" style="margin-top: 22px">
     <v-row justify="center" align="center">
 
       <v-col

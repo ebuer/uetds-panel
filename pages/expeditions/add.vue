@@ -3,7 +3,6 @@
     <app-page :title="moduleInfo.title">
       <div class="app-create">
 
-
         <div v-if="!ready" class="text-center">
           <v-progress-circular
             :size="50"
@@ -11,239 +10,261 @@
             indeterminate
           ></v-progress-circular>
         </div>
-        <v-form v-else class="app-form" v-model="validForm" ref="pageForm">
-
-          <div class="app-form-group">
-            <v-autocomplete
-              class="app-form-item"
-              outlined
-              v-model="form.car_id"
-              :items="selectItems.cars"
-              item-value="id"
-              item-text="plaque"
-              label="Araba Seç"
-              :rules="rules.requiredByNumb"
+        <div v-else class="app-create-content">
+          <div v-if="userInfoStatus !== null && (userInfoStatus === 0)">
+            <v-alert
+              style="margin: 10px 0"
+              dense
+              type="error"
             >
-            </v-autocomplete>
+              UETDS bildirimini yapabilmek için <strong>E-Devlet</strong> bilgilerinizi
+              <NuxtLink to="/profile" style="color: white">buradan</NuxtLink>
+              güncellemeniz gerekiyor,
+            </v-alert>
           </div>
+          <v-form v-if="userInfoStatus !== null && (userInfoStatus === 1)" class="app-form" v-model="validForm" ref="pageForm">
 
-          <div class="app-form-group">
-            <v-autocomplete
-              class="app-form-item"
-              outlined
-              v-model="form.trailer_id"
-              :items="selectItems.trailers"
-              item-value="id"
-              item-text="plaque"
-              label="Dorse Seç"
-            >
-            </v-autocomplete>
-          </div>
+            <div class="app-form-group">
+              <v-autocomplete
+                class="app-form-item"
+                outlined
+                v-model="form.car_id"
+                :items="selectItems.cars"
+                item-value="id"
+                item-text="plaque"
+                label="Araba Seç"
+                :rules="rules.requiredByNumb"
+              >
+              </v-autocomplete>
+            </div>
 
-          <div class="app-form-group">
-            <v-autocomplete
-              class="app-form-item"
-              outlined
-              v-model="form.driver_id_1"
-              :items="selectItems.drivers"
-              item-value="id"
-              item-text="name_surname"
-              label="Sürücü Seç"
-              :rules="rules.requiredByNumb"
-            >
-            </v-autocomplete>
-          </div>
+            <div class="app-form-group">
+              <v-autocomplete
+                class="app-form-item"
+                outlined
+                v-model="form.trailer_id"
+                :items="selectItems.trailers"
+                item-value="id"
+                item-text="plaque"
+                label="Dorse Seç"
+              >
+              </v-autocomplete>
+            </div>
 
-          <div class="app-form-group">
-            <v-autocomplete
-              class="app-form-item"
-              outlined
-              v-model="form.driver_id_2"
-              :items="selectItems.drivers"
-              item-value="id"
-              item-text="name_surname"
-              label="2.Sürücü Seç"
-            >
-            </v-autocomplete>
-          </div>
+            <div class="app-form-group">
+              <v-autocomplete
+                class="app-form-item"
+                outlined
+                v-model="form.driver_id_1"
+                :items="selectItems.drivers"
+                item-value="id"
+                item-text="name_surname"
+                label="Sürücü Seç"
+                :rules="rules.requiredByNumb"
+              >
+              </v-autocomplete>
+            </div>
 
-
-          <!--          <div class="app-form-group">-->
-          <!--            <v-btn @click="openPicker()">expedition_start_date Seç</v-btn>-->
-          <!--            <app-date-picker ref="picker"></app-date-picker>-->
-          <!--          </div>-->
-
-
-          <v-row>
-            <v-col>
-              <div class="app-form-group">
-                <v-text-field
-                  class="app-form-item"
-                  outlined
-                  v-model="form.expedition_start_date"
-                  :rules="rules.required"
-                  label="Sefer Başlangıç Tarihi"
-                  type="date"
-                  required
-                ></v-text-field>
-              </div>
-            </v-col>
-            <v-col>
-              <div class="app-form-group">
-                <v-text-field
-                  class="app-form-item"
-                  outlined
-                  v-model="form.expedition_start_time"
-                  :rules="rules.required"
-                  label="Sefer Başlangıç Saati"
-                  type="time"
-                  required
-                ></v-text-field>
-              </div>
-            </v-col>
-          </v-row>
+            <div class="app-form-group">
+              <v-autocomplete
+                class="app-form-item"
+                outlined
+                v-model="form.driver_id_2"
+                :items="selectItems.drivers"
+                item-value="id"
+                item-text="name_surname"
+                label="2.Sürücü Seç"
+              >
+              </v-autocomplete>
+            </div>
 
 
-          <v-row>
-            <v-col>
-              <div class="app-form-group">
-                <v-text-field
-                  class="app-form-item"
-                  outlined
-                  v-model="form.expedition_end_date"
-                  :rules="rules.required"
-                  label="Sefer Bitiş Tarihi"
-                  type="date"
-                  required
-                ></v-text-field>
-              </div>
-            </v-col>
-            <v-col>
-              <div class="app-form-group">
-                <v-text-field
-                  class="app-form-item"
-                  outlined
-                  v-model="form.expedition_end_time"
-                  :rules="rules.required"
-                  label="Sefer Bitiş Saati"
-                  type="time"
-                  required
-                ></v-text-field>
-              </div>
-            </v-col>
-          </v-row>
-
-          <div class="app-form-group">
-            <v-autocomplete
-              class="app-form-item"
-              outlined
-              v-model="form.transport_type_code_id"
-              :items="selectItems.transportTypes"
-              item-value="id"
-              item-text="description"
-              label="Taşıma Türü"
-              :rules="rules.requiredByNumb"
-            >
-            </v-autocomplete>
-          </div>
-
-          <div class="app-form-group">
-            <v-autocomplete
-              class="app-form-item"
-              outlined
-              v-model="form.sender_id"
-              :items="selectItems.senders"
-              item-value="id"
-              item-text="title"
-              label="Yük Temin Noktası"
-              :rules="rules.requiredByNumb"
-            >
-            </v-autocomplete>
-          </div>
-
-          <div class="app-form-group">
-            <v-autocomplete
-              class="app-form-item"
-              outlined
-              v-model="form.customer_id"
-              :items="selectItems.customers"
-              item-value="id"
-              item-text="title"
-              label="Müşteri"
-              :rules="rules.requiredByNumb"
-            >
-            </v-autocomplete>
-          </div>
-
-          <div class="app-form-group">
-            <v-autocomplete
-              class="app-form-item"
-              outlined
-              v-model="form.load_type_id"
-              :items="selectItems.loadTypes"
-              item-value="load_type_id"
-              item-text="name"
-              label="Yük Cinsi"
-              :rules="rules.requiredByNumb"
-            >
-            </v-autocomplete>
-          </div>
+            <!--          <div class="app-form-group">-->
+            <!--            <v-btn @click="openPicker()">expedition_start_date Seç</v-btn>-->
+            <!--            <app-date-picker ref="picker"></app-date-picker>-->
+            <!--          </div>-->
 
 
-          <div class="app-form-group">
-            <v-autocomplete
-              class="app-form-item"
-              outlined
-              v-model="form.load_quantity_unit"
-              :items="selectItems.loadQuantityUnits"
-              item-value="kodu"
-              item-text="aciklama"
-              label="Yük Miktarı Birimi"
-              :rules="rules.requiredByNumb"
-            >
-            </v-autocomplete>
-          </div>
+            <v-row>
+              <v-col>
+                <div class="app-form-group">
+                  <v-text-field
+                    class="app-form-item"
+                    outlined
+                    v-model="form.expedition_start_date"
+                    :rules="rules.required"
+                    label="Sefer Başlangıç Tarihi"
+                    type="date"
+                    required
+                  ></v-text-field>
+                </div>
+              </v-col>
+              <v-col>
+                <div class="app-form-group">
+                  <v-text-field
+                    class="app-form-item"
+                    outlined
+                    v-model="form.expedition_start_time"
+                    :rules="rules.required"
+                    label="Sefer Başlangıç Saati"
+                    type="time"
+                    required
+                  ></v-text-field>
+                </div>
+              </v-col>
+            </v-row>
 
-          <div class="app-form-group">
-            <v-text-field
-              class="app-form-item"
-              outlined
-              v-model="form.load_quantity"
-              :rules="rules.required"
-              label="Yük Miktarı"
-              type="number"
-            ></v-text-field>
-          </div>
 
-          <div class="app-form-group" v-if="form.transport_type_code_id === 1">
-            <v-autocomplete
-              class="app-form-item"
-              outlined
-              v-model="form.dangerous_goods_transport_type_id"
-              :items="selectItems.dangerousGoodsTransportTypes"
-              item-value="code"
-              item-text="description"
-              label="Tehlikeli Madde Taşıma Şekli"
-              :rules="form.transport_type_code_id === 1 ? rules.required : []"
-            >
-            </v-autocomplete>
-          </div>
+            <v-row>
+              <v-col>
+                <div class="app-form-group">
+                  <v-text-field
+                    class="app-form-item"
+                    outlined
+                    v-model="form.expedition_end_date"
+                    :rules="rules.required"
+                    label="Sefer Bitiş Tarihi"
+                    type="date"
+                    required
+                  ></v-text-field>
+                </div>
+              </v-col>
+              <v-col>
+                <div class="app-form-group">
+                  <v-text-field
+                    class="app-form-item"
+                    outlined
+                    v-model="form.expedition_end_time"
+                    :rules="rules.required"
+                    label="Sefer Bitiş Saati"
+                    type="time"
+                    required
+                  ></v-text-field>
+                </div>
+              </v-col>
+            </v-row>
 
-          <br><br>
-          unId
-          :rules="rules.requiredByNumb"
-          <br><br>
+            <div class="app-form-group">
+              <v-autocomplete
+                class="app-form-item"
+                outlined
+                v-model="form.transport_type_code_id"
+                :items="selectItems.transportTypes"
+                item-value="id"
+                item-text="description"
+                label="Taşıma Türü"
+                :rules="rules.requiredByNumb"
+              >
+              </v-autocomplete>
+            </div>
 
-          <div class="app-form-submit">
-            <v-btn @click="submit()"
-                   color="primary"
-                   :disabled="loader"
-                   :loading="loader">
-              Kaydet
-            </v-btn>
-          </div>
+            <div class="app-form-group">
+              <v-autocomplete
+                class="app-form-item"
+                outlined
+                v-model="form.sender_id"
+                :items="selectItems.senders"
+                item-value="id"
+                item-text="title"
+                label="Yük Temin Noktası"
+                :rules="rules.requiredByNumb"
+              >
+              </v-autocomplete>
+            </div>
 
-        </v-form>
+            <div class="app-form-group">
+              <v-autocomplete
+                class="app-form-item"
+                outlined
+                v-model="form.customer_id"
+                :items="selectItems.customers"
+                item-value="id"
+                item-text="title"
+                label="Müşteri"
+                :rules="rules.requiredByNumb"
+              >
+              </v-autocomplete>
+            </div>
+
+            <div class="app-form-group">
+              <v-autocomplete
+                class="app-form-item"
+                outlined
+                v-model="form.load_type_id"
+                :items="selectItems.loadTypes"
+                item-value="load_type_id"
+                item-text="name"
+                label="Yük Cinsi"
+                :rules="rules.requiredByNumb"
+              >
+              </v-autocomplete>
+            </div>
+
+
+            <div class="app-form-group">
+              <v-autocomplete
+                class="app-form-item"
+                outlined
+                v-model="form.load_quantity_unit"
+                :items="selectItems.loadQuantityUnits"
+                item-value="kodu"
+                item-text="aciklama"
+                label="Yük Miktarı Birimi"
+                :rules="rules.requiredByNumb"
+              >
+              </v-autocomplete>
+            </div>
+
+            <div class="app-form-group">
+              <v-text-field
+                class="app-form-item"
+                outlined
+                v-model="form.load_quantity"
+                :rules="rules.required"
+                label="Yük Miktarı"
+                type="number"
+              ></v-text-field>
+            </div>
+
+            <div class="app-form-group" v-if="form.transport_type_code_id === 1">
+              <v-autocomplete
+                class="app-form-item"
+                outlined
+                v-model="form.dangerous_goods_transport_type_id"
+                :items="selectItems.dangerousGoodsTransportTypes"
+                item-value="code"
+                item-text="description"
+                label="Tehlikeli Madde Taşıma Şekli"
+                :rules="form.transport_type_code_id === 1 ? rules.required : []"
+              >
+              </v-autocomplete>
+            </div>
+
+            <div class="app-form-group">
+              <v-autocomplete
+                class="app-form-item"
+                outlined
+                v-model="form.unId"
+                :items="selectItems.unNumbers"
+                item-value="code"
+                item-text="title"
+                label="Un Kodu"
+                :rules="rules.requiredByNumb"
+              >
+              </v-autocomplete>
+            </div>
+
+            <div class="app-form-submit">
+              <v-btn @click="submit()"
+                     color="primary"
+                     :disabled="loader"
+                     :loading="loader">
+                Kaydet
+              </v-btn>
+            </div>
+
+          </v-form>
+        </div>
 
         <div class="app-error" v-if="error.length > 0">
           <div v-for="(item, index) in error" :key="index">
@@ -269,6 +290,7 @@
     name: 'expeditions-add',
     data() {
       return {
+        userInfoStatus: null,
         ready: false,
         submitting: false,
         error: [],
@@ -296,8 +318,8 @@
           load_type_id: '', // required
           load_quantity_unit: '', // required
           load_quantity: '', // required
-          dangerous_goods_transport_type_id: '', //  TODO -> TAşıma Türünde "Teklikeli madde" Seçilirse required yoksa nullable
-          unId: '1204', // required
+          dangerous_goods_transport_type_id: '',
+          unId: '', // required
         },
         rules: {
           required: [
@@ -316,6 +338,7 @@
           customers: [],
           loadTypes: [],
           dangerousGoodsTransportTypes: [],
+          unNumbers: [],
           loadQuantityUnits: [
             {
               "aciklama": "Miligram",
@@ -341,28 +364,51 @@
     created() {
       const self = this;
 
-      self.$axios.all([
-        self.$axios.get('cars'),
-        self.$axios.get('trailers'),
-        self.$axios.get('drivers'),
-        self.$axios.post('transport-types'),
-        self.$axios.get('senders'),
-        self.$axios.get('customers'),
-        self.$axios.post('load-types'),
-        self.$axios.post('dangerous-goods-transport-types'),
-      ]).then(res => {
-        console.log('all', res)
-        self.selectItems.cars = res[0].data.data;
-        self.selectItems.trailers = res[1].data.data;
-        self.selectItems.drivers = res[2].data.data;
-        self.selectItems.transportTypes = res[3].data.data;
-        self.selectItems.senders = res[4].data.data;
-        self.selectItems.customers = res[5].data.data;
-        self.selectItems.loadTypes = res[6].data.data;
-        self.selectItems.dangerousGoodsTransportTypes = res[7].data.data;
 
-        setTimeout(() => self.ready = true)
-      })
+      self.$axios.post('check-user-information')
+        .then(statusRes => {
+
+          // Eksiksiz ise status : 1 -> form doldurabilir
+          // Eksik ise status : 0 -> formU dolduramaz
+
+          const statusData = statusRes.data.status;
+
+          this.userInfoStatus = statusData
+
+          if (statusData === 0) {
+            setTimeout(() => self.ready = true)
+          } else {
+
+            self.$axios.all([
+              self.$axios.get('cars'),
+              self.$axios.get('trailers'),
+              self.$axios.get('drivers'),
+              self.$axios.post('transport-types'),
+              self.$axios.get('senders'),
+              self.$axios.get('customers'),
+              self.$axios.post('load-types'),
+              self.$axios.post('dangerous-goods-transport-types'),
+              self.$axios.post('un-numbers'),
+            ]).then(res => {
+              console.log('all', res)
+              self.selectItems.cars = res[0].data.data;
+              self.selectItems.trailers = res[1].data.data;
+              self.selectItems.drivers = res[2].data.data;
+              self.selectItems.transportTypes = res[3].data.data;
+              self.selectItems.senders = res[4].data.data;
+              self.selectItems.customers = res[5].data.data;
+              self.selectItems.loadTypes = res[6].data.data;
+              self.selectItems.dangerousGoodsTransportTypes = res[7].data.data;
+              self.selectItems.unNumbers = res[8].data.data;
+
+              setTimeout(() => self.ready = true)
+            })
+
+
+          }
+
+
+        })
 
 
       // districts/{provinceID} - POST // İlçeler
