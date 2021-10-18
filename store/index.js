@@ -9,7 +9,8 @@ export const state = () => ({
     type: 'success'
   },
   activeYear: '',
-  newYear: ''
+  newYear: '',
+  userStatusInfo: null
 });
 export const mutations = {
   SET_TOKEN(state, payload) {
@@ -31,9 +32,15 @@ export const mutations = {
   },
   SET_NEW_YEAR(state, payload) {
     state.newYear = payload
+  },
+  SET_USER_INFO(state, payload) {
+    state.userStatusInfo = payload
   }
 };
 export const actions = {
+  setUserInfo({commit}, payload) {
+    commit('SET_USER_INFO', payload)
+  },
   setToken({commit, state}, payload) {
     commit('SET_TOKEN', payload)
   },

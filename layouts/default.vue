@@ -183,6 +183,7 @@
           >
             <v-list-item-group
               color="primary"
+              v-if="userInfo !== null &&(userInfo.user_type === 'admin')"
             >
               <v-list-item to="/profile">
                 <v-list-item-icon>
@@ -206,7 +207,7 @@
     <v-main>
       <v-container>
         <v-alert
-          v-if="userInfoStatus !== null && (userInfoStatus === 0)"
+          v-if="userStatusInfo !== null && (userStatusInfo === 0)"
           style="margin: 10px 0 0 0;"
           dense
           outlined
@@ -266,7 +267,8 @@
         messages: 1,
         drawer: true,
         fixed: false,
-        items: [
+        items: [],
+        adminItems: [
           {
             icon: 'mdi-apps',
             title: 'Anasayfa',
@@ -303,6 +305,18 @@
             to: '/expeditions'
           }
         ],
+        driverItems: [
+          {
+            icon: 'mdi-apps',
+            title: 'Anasayfa',
+            to: '/'
+          },
+          {
+            icon: 'mdi-map-check',
+            title: 'Seferler',
+            to: '/drivers/expeditions'
+          }
+        ],
         miniVariant: false,
         right: true,
         rightDrawer: false,
@@ -320,6 +334,9 @@
       snackBarType() {
         return this.$store.state.snackbar.type
       },
+      userStatusInfo() {
+        return this.$store.state.userStatusInfo
+      },
       showSnackBar: {
         get() {
           return this.$store.state.snackbar.open
@@ -330,22 +347,30 @@
       },
     },
     mounted() {
-      console.log('logged in',)
-
-      this.$axios.post('check-user-information')
-        .then(res => {
-          // Eksiksiz ise status : 1
-          // Eksik ise status : 0
-          this.userInfoStatus = res.data.status
-        })
+      const self = this;
 
 
       const info = this.$userInfo()
 
+
       if (info !== undefined) {
+
+        if (info.user_type === 'admin') {
+          this.$axios.post('check-user-information')
+            .then(res => {
+              // Eksiksiz ise status : 1
+              // Eksik ise status : 0
+              self.$store.dispatch('setUserInfo', res.data.status)
+            })
+        }
+
+        self.items = info.user_type === 'admin' ? self.adminItems : self.driverItems
+
+
         this.userInfo = {
           email: info.email,
-          name: info.name
+          name: info.name,
+          user_type: info.user_type
         }
       }
     },

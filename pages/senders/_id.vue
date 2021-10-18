@@ -162,6 +162,7 @@
         form: {
           title: '',
           tax_id_no: '',
+          country_id: 'TR',
           province_code: '',
           district_code: '',
         },
@@ -267,7 +268,16 @@
 
               })
               .catch(err => {
-                self.error.push('Bilgileriniz kontrol edin.')
+                if (err.response !== undefined) {
+                  const errors = err.response.data.errors
+                  if (errors !== undefined) {
+                    Object.keys(errors).forEach(item => {
+                      self.error.push(errors[item][0])
+                    })
+                  }
+                } else {
+                  self.error.push('Bilgileriniz kontrol edin.')
+                }
                 self.loader = false;
                 self.submitting = false
               })

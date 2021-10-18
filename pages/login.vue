@@ -50,8 +50,8 @@
                       outlined
                       v-model="loginForm.email"
                       :rules="emailRules"
-                      append-icon="mdi-email"
-                      label="E-posta"
+                      append-icon="mdi-account"
+                      label="E-posta veya TC"
                       required
                       v-on:keyup.enter="submit()"
                     ></v-text-field>
@@ -203,8 +203,8 @@
           v => !!v.trim() || 'Şifre Zorunludur',
         ],
         emailRules: [
-          v => !!v.trim() || 'E-posta Zorunludur',
-          v => /.+@.+/.test(v) || 'Geçerli E-posta giriniz',
+          v => !!v.trim() || 'E-posta veya TC Zorunludur',
+          // v => /.+@.+/.test(v) || 'Geçerli E-posta giriniz',
         ],
         loginForm: {
           email: 'test@test.com',
@@ -222,7 +222,7 @@
     methods: {
       submit() {
         const self = this;
-        if(!self.loginSubmitting) {
+        if (!self.loginSubmitting) {
           self.resetError()
           const valid = this.$refs.loginForm.validate();
           if (valid) {
@@ -232,8 +232,6 @@
               .then((res) => {
                 self.buttonLoader = false
                 setTimeout(() => self.loginSubmitting = false, 500)
-
-                console.log('AFDTER LKIOGİNNNN')
               })
               .catch(err => {
                 self.error.login.push('Bilgileriniz uyuşmuyor.')
@@ -246,42 +244,52 @@
       register() {
         const self = this;
 
-       if(!self.registerSubmitting) {
-         self.resetError()
+        if (!self.registerSubmitting) {
+          self.resetError()
 
-         const valid = this.$refs.registerForm.validate();
+          const valid = this.$refs.registerForm.validate();
 
-         if (valid) {
-           self.buttonLoader = true;
-           self.registerSubmitting = true
-           self.$axios.post('register', self.registerForm)
-             .then(res => {
-               const errors = res.data.error
-               if (errors !== undefined) {
-                 Object.keys(errors).forEach(item => {
-                   self.error.register.push(errors[item][0])
-                 })
-               } else {
-                 this.$auth.loginWith('local', {
-                   data: {
-                     email: self.registerForm.email,
-                     password: self.registerForm.password,
-                   }
-                 })
-               }
+          if (valid) {
+            self.buttonLoader = true;
+            self.registerSubmitting = true
+            self.$axios.post('register', self.registerForm)
+              .then(res => {
+                const errors = res.data.error
+                if (errors !== undefined) {
+                  Object.keys(errors).forEach(item => {
+                    self.error.register.push(errors[item][0])
+                  })
+                } else {
+                  this.$auth.loginWith('local', {
+                    data: {
+                      email: self.registerForm.email,
+                      password: self.registerForm.password,
+                    }
+                  })
+                }
 
-               self.buttonLoader = false;
-               setTimeout(() => self.registerSubmitting = false, 500)
+                self.buttonLoader = false;
+                setTimeout(() => self.registerSubmitting = false, 500)
 
-             })
-             .catch(err => {
-               this.error.register.items.push('Bilgileriniz kontrol edin.')
-               // this.error.register.text = 'Bilgileriniz kontrol edin.'
-               this.error.register.show = true
-               self.registerSubmitting = false
-             })
-         }
-       }
+              })
+              .catch(err => {
+                if (err.response !== undefined) {
+                  const errors = err.response.data.errors
+                  if (errors !== undefined) {
+                    Object.keys(errors).forEach(item => {
+                      self.error.register.push(errors[item][0])
+                    })
+                  }
+                } else {
+                  this.error.register.push('Bilgileriniz kontrol edin.')
+                }
+
+                self.buttonLoader = false;
+                this.error.register.show = true
+                self.registerSubmitting = false
+              })
+          }
+        }
 
       },
       resetError() {

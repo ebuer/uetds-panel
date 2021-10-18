@@ -162,6 +162,7 @@
         form: {
           title: '',
           tax_id_no: '',
+          country_id: 'TR',
           province_code: '',
           district_code: '',
         },
@@ -187,8 +188,8 @@
           .then(res => {
             const data = res.data.data[0];
 
-            const axiosrequest1 = self.$axios.post('province');
-            const axiosrequest2 = self.$axios.post('district/' + data.province_code);
+            const axiosrequest1 = self.$axios.post('provinces');
+            const axiosrequest2 = self.$axios.post('districts/' + data.province_code);
 
             self.$axios.all([
               axiosrequest1,
@@ -212,7 +213,7 @@
       setDistrict(value) {
         const self = this;
         self.selectItems.districtLoader = true
-        self.$axios.post('district/' + value)
+        self.$axios.post('districts/' + value)
           .then(res => {
             self.selectItems.districtLoader = false
             self.selectItems.districts = res.data.data
@@ -267,7 +268,16 @@
 
               })
               .catch(err => {
-                self.error.push('Bilgileriniz kontrol edin.')
+                if (err.response !== undefined) {
+                  const errors = err.response.data.errors
+                  if (errors !== undefined) {
+                    Object.keys(errors).forEach(item => {
+                      self.error.push(errors[item][0])
+                    })
+                  }
+                } else {
+                  self.error.push('Bilgileriniz kontrol edin.')
+                }
                 self.loader = false;
                 self.submitting = false
               })

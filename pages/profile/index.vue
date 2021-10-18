@@ -48,22 +48,24 @@
             ></v-text-field>
           </div>
 
-          <div class="app-form-group">
-            <v-text-field
-              class="app-form-item"
-              outlined
-              v-model="form.title"
-              label="Şirket İsim"
-            ></v-text-field>
-          </div>
-
 
           <div class="app-form-group">
             <v-text-field
               class="app-form-item"
               outlined
               v-model="form.address"
+              :rules="rules.required"
               label="Adres"
+            ></v-text-field>
+          </div>
+
+          <div class="app-form-group">
+            <v-text-field
+              class="app-form-item"
+              outlined
+              v-model="form.title"
+              :rules="rules.required"
+              label="Şirket İsim"
             ></v-text-field>
           </div>
 
@@ -225,10 +227,6 @@
             self.$axios.put(self.moduleInfo.formEndpoint, self.form)
               .then(res => {
 
-                console.log('FORM UPDATE', res)
-
-                return
-
                 const errors = res.data.error
                 if (errors !== undefined) {
                   Object.keys(errors).forEach(item => {
@@ -236,15 +234,21 @@
                   })
                 } else {
 
-                  if (res.data.createdId !== undefined) {
+                  if (res.data.updatedId !== undefined) {
 
+                    this.$axios.post('check-user-information')
+                      .then(res => {
+                        // Eksiksiz ise status : 1
+                        // Eksik ise status : 0
+                        self.$store.dispatch('setUserInfo', res.data.status)
+                      })
                     self.$store.dispatch('openSnackbar', {
-                      text: self.form.plaque + ' Plakalı Araç Eklenmiştir'
+                      text: 'Profil Güncellendi'
                     });
 
-                    setTimeout(() => {
-                      self.$router.push(self.moduleInfo.routeAfterSuccess)
-                    })
+                    // setTimeout(() => {
+                    //   self.$router.push(self.moduleInfo.routeAfterSuccess)
+                    // })
                   } else {
                     self.error.push('Bilgileriniz kontrol edin.')
                     self.loader = false;

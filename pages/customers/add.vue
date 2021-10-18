@@ -153,6 +153,7 @@
         form: {
           title: '',
           tax_id_no: '',
+          country_id: 'TR',
           province_code: '',
           district_code: '',
         },
@@ -170,7 +171,7 @@
     },
     created() {
       const self = this;
-      self.$axios.post('province')
+      self.$axios.post('provinces')
         .then(res => {
           self.selectItems.provinces = res.data.data
         })
@@ -179,7 +180,7 @@
       setDistrict(value) {
         const self = this;
         self.selectItems.districtLoader = true
-        self.$axios.post('district/' + value)
+        self.$axios.post('districts/' + value)
           .then(res => {
             self.selectItems.districtLoader = false
             self.selectItems.districts = res.data.data
@@ -234,7 +235,16 @@
 
               })
               .catch(err => {
-                self.error.push('Bilgileriniz kontrol edin.')
+                if (err.response !== undefined) {
+                  const errors = err.response.data.errors
+                  if (errors !== undefined) {
+                    Object.keys(errors).forEach(item => {
+                      self.error.push(errors[item][0])
+                    })
+                  }
+                } else {
+                  self.error.push('Bilgileriniz kontrol edin.')
+                }
                 self.loader = false;
                 self.submitting = false
               })
