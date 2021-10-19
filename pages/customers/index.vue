@@ -41,6 +41,7 @@
             @click:row="clickRow"
             class="app-table"
           >
+
             <template v-slot:item.action="{ item }">
               <div style="display: flex;">
 
@@ -122,7 +123,8 @@
                 :key="index"
               >
                 <td>{{ item.title }}</td>
-                <td>{{ detailDialog.item[item.value] }}</td>
+                <td v-if="item.callback !== undefined">{{ item.callback(detailDialog.item) }}</td>
+                <td v-else>{{ detailDialog.item[item.value] }}</td>
               </tr>
               </tbody>
             </template>
@@ -257,11 +259,15 @@
             },
             {
               title: 'İl',
-              value: 'district'
+              callback: (item) => {
+                return item.district.name
+              }
             },
             {
               title: 'İlçe',
-              value: 'province'
+              callback: (item) => {
+                return item.province.name
+              }
             }
           ],
           item: null
@@ -279,8 +285,8 @@
             {text: 'Aksiyon', value: 'action', width: '15%'},
             {text: 'Ünvan', value: 'title'},
             {text: 'Vergi Numarası', value: 'tax_id_no'},
-            {text: 'İl', value: 'district'},
-            {text: 'İlçe', value: 'province'},
+            {text: 'İl', value: 'district.name'},
+            {text: 'İlçe', value: 'province.name'},
           ],
           items: []
         },

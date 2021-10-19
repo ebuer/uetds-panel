@@ -122,7 +122,8 @@
                 :key="index"
               >
                 <td>{{ item.title }}</td>
-                <td>{{ detailDialog.item[item.value] }}</td>
+                <td v-if="item.callback !== undefined">{{ item.callback(detailDialog.item) }}</td>
+                <td v-else>{{ detailDialog.item[item.value] }}</td>
               </tr>
               </tbody>
             </template>
@@ -257,11 +258,15 @@
             },
             {
               title: 'İl',
-              value: 'province'
+              callback: (item) => {
+                return item.district.name
+              }
             },
             {
               title: 'İlçe',
-              value: 'district'
+              callback: (item) => {
+                return item.province.name
+              }
             }
           ],
           item: null
@@ -279,8 +284,8 @@
             {text: 'Aksiyon', value: 'action', width: '15%'},
             {text: 'Ünvan', value: 'title'},
             {text: 'Vergi Numarası', value: 'tax_id_no'},
-            {text: 'İl', value: 'province'},
-            {text: 'İlçe', value: 'district'},
+            {text: 'İl', value: 'province.name'},
+            {text: 'İlçe', value: 'district.name'},
           ],
           items: []
         },
