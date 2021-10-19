@@ -15,16 +15,16 @@
               placeholder="00 TR 0000"
               required
             ></v-text-field>
-<!--            <v-text-field-->
-<!--              class="app-form-item"-->
-<!--              outlined-->
-<!--              v-model="form.plaque"-->
-<!--              :rules="rules.required"-->
-<!--              label="Plaka"-->
-<!--              placeholder="00 TR 0000"-->
-<!--              required-->
-<!--              v-mask="'## AA ####'"-->
-<!--            ></v-text-field>-->
+            <!--            <v-text-field-->
+            <!--              class="app-form-item"-->
+            <!--              outlined-->
+            <!--              v-model="form.plaque"-->
+            <!--              :rules="rules.required"-->
+            <!--              label="Plaka"-->
+            <!--              placeholder="00 TR 0000"-->
+            <!--              required-->
+            <!--              v-mask="'## AA ####'"-->
+            <!--            ></v-text-field>-->
           </div>
 
 
@@ -60,6 +60,10 @@
 </template>
 
 <script>
+
+
+  const plaqueReg = new RegExp(/^(0[1-9]|[1-7][0-9]|8[01])((\s?[a-zA-Z]\s?)(\d{4,5})|(\s?[a-zA-Z]{2}\s?)(\d{3,4})|(\s?[a-zA-Z]{3}\s?)(\d{2,3}))$/);
+
   export default {
     name: 'cars-add',
     data() {
@@ -79,6 +83,7 @@
         rules: {
           required: [
             v => !!v.trim() || 'Plaka Zorunludur',
+            v => plaqueReg.test(v) || 'Plakaya Uygun Format Girin'
           ],
         }
       }
@@ -91,7 +96,7 @@
       submit() {
         const self = this;
 
-        if(!self.submitting) {
+        if (!self.submitting) {
 
           self.resetError()
 

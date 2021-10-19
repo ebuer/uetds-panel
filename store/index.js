@@ -10,7 +10,8 @@ export const state = () => ({
   },
   activeYear: '',
   newYear: '',
-  userStatusInfo: null
+  userStatusInfo: null,
+  userIsAdmin: 'admin'
 });
 export const mutations = {
   SET_TOKEN(state, payload) {
@@ -35,9 +36,15 @@ export const mutations = {
   },
   SET_USER_INFO(state, payload) {
     state.userStatusInfo = payload
+  },
+  SET_USER_ISADMIN(state, payload) {
+    state.userIsAdmin = payload
   }
 };
 export const actions = {
+  setUserIsAdmin({commit}, payload) {
+    commit('SET_USER_ISADMIN', payload)
+  },
   setUserInfo({commit}, payload) {
     commit('SET_USER_INFO', payload)
   },

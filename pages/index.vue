@@ -1,10 +1,10 @@
 <template>
   <div class="app-page index" style="margin-top: 22px">
-    <div v-if="$userInfo() !== undefined &&($userInfo().user_type !== 'admin')" class="app-page-inner">
+    <div v-if="userType !== null &&(userType !== 'admin')" class="app-page-inner">
       <v-row>
-<!--        aktif tanımlanmış-->
-<!--        geçmiş-->
-<!--        vs-->
+        <!--        aktif tanımlanmış-->
+        <!--        geçmiş-->
+        <!--        vs-->
         <v-row justify="center" align="center">
           <v-col cols="4">
             <v-card class="add-big-icon-btn" @click="goTo('/drivers/expeditions')">
@@ -131,6 +131,11 @@
           },
         ],
       }
+    },
+    computed: {
+      userType() {
+        return this.$store.state.userIsAdmin
+      },
     },
     created() {
       const self = this;
