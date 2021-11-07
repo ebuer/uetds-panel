@@ -22,7 +22,8 @@
               güncellemeniz gerekiyor,
             </v-alert>
           </div>
-          <v-form v-if="userInfoStatus !== null && (userInfoStatus === 1)" class="app-form" v-model="validForm" ref="pageForm">
+          <v-form v-if="userInfoStatus !== null && (userInfoStatus === 1)" class="app-form" v-model="validForm"
+                  ref="pageForm">
 
             <div class="app-form-group">
               <v-autocomplete
@@ -85,65 +86,6 @@
             <!--          </div>-->
 
 
-            <v-row>
-              <v-col>
-                <div class="app-form-group">
-                  <v-text-field
-                    class="app-form-item"
-                    outlined
-                    v-model="form.expedition_start_date"
-                    :rules="rules.required"
-                    label="Sefer Başlangıç Tarihi"
-                    type="date"
-                    required
-                  ></v-text-field>
-                </div>
-              </v-col>
-              <v-col>
-                <div class="app-form-group">
-                  <v-text-field
-                    class="app-form-item"
-                    outlined
-                    v-model="form.expedition_start_time"
-                    :rules="rules.required"
-                    label="Sefer Başlangıç Saati"
-                    type="time"
-                    required
-                  ></v-text-field>
-                </div>
-              </v-col>
-            </v-row>
-
-
-            <v-row>
-              <v-col>
-                <div class="app-form-group">
-                  <v-text-field
-                    class="app-form-item"
-                    outlined
-                    v-model="form.expedition_end_date"
-                    :rules="rules.required"
-                    label="Sefer Bitiş Tarihi"
-                    type="date"
-                    required
-                  ></v-text-field>
-                </div>
-              </v-col>
-              <v-col>
-                <div class="app-form-group">
-                  <v-text-field
-                    class="app-form-item"
-                    outlined
-                    v-model="form.expedition_end_time"
-                    :rules="rules.required"
-                    label="Sefer Bitiş Saati"
-                    type="time"
-                    required
-                  ></v-text-field>
-                </div>
-              </v-col>
-            </v-row>
-
             <div class="app-form-group">
               <v-autocomplete
                 class="app-form-item"
@@ -154,6 +96,20 @@
                 item-text="description"
                 label="Taşıma Türü"
                 :rules="rules.requiredByNumb"
+              >
+              </v-autocomplete>
+            </div>
+
+            <div class="app-form-group" v-if="form.transport_type_code_id === 1">
+              <v-autocomplete
+                class="app-form-item"
+                outlined
+                v-model="form.dangerous_goods_transport_type_id"
+                :items="selectItems.dangerousGoodsTransportTypes"
+                item-value="code"
+                item-text="description"
+                label="Tehlikeli Madde Taşıma Şekli"
+                :rules="form.transport_type_code_id === 1 ? rules.required : []"
               >
               </v-autocomplete>
             </div>
@@ -216,43 +172,151 @@
             </div>
 
             <div class="app-form-group">
-              <v-text-field
-                class="app-form-item"
-                outlined
-                v-model="form.load_quantity"
-                :rules="rules.required"
-                label="Yük Miktarı"
-                type="number"
-              ></v-text-field>
-            </div>
-
-            <div class="app-form-group" v-if="form.transport_type_code_id === 1">
-              <v-autocomplete
-                class="app-form-item"
-                outlined
-                v-model="form.dangerous_goods_transport_type_id"
-                :items="selectItems.dangerousGoodsTransportTypes"
-                item-value="code"
-                item-text="description"
-                label="Tehlikeli Madde Taşıma Şekli"
-                :rules="form.transport_type_code_id === 1 ? rules.required : []"
-              >
-              </v-autocomplete>
-            </div>
-
-            <div class="app-form-group">
               <v-autocomplete
                 class="app-form-item"
                 outlined
                 v-model="form.unId"
                 :items="selectItems.unNumbers"
                 item-value="code"
-                item-text="title"
+                :item-text="item => item.code +' - '+ item.title"
                 label="Un Kodu"
                 :rules="rules.requiredByNumb"
               >
               </v-autocomplete>
             </div>
+
+            <div class="app-form-group">
+              <p>Gönderim Tipi</p>
+              <v-radio-group
+                v-model="form.sendTypeStatus"
+                row
+              >
+                <v-radio
+                  label="Sürücü Onay"
+                  value="1"
+                ></v-radio>
+                <v-radio
+                  label="Uetds bildirim"
+                  value="2"
+                ></v-radio>
+              </v-radio-group>
+            </div>
+
+
+            <v-alert
+              type="info"
+              elevation="2"
+            >
+              Sürücüye Onay gönderildiğinde eksik bilgileir sürücü tarafından tamamalanması gerekir.
+            </v-alert>
+
+
+<!--            // v-if-->
+            <div class="mt-10">
+              <v-row>
+                <v-col>
+                  <div class="app-form-group">
+                    <v-text-field
+                      class="app-form-item"
+                      outlined
+                      v-model="form.filling_start_date"
+                      :rules="form.sendTypeStatus === '2' ? rules.required : []"
+                      label="Dolum Başlangıç Tarihi"
+                      type="date"
+                      required
+                    ></v-text-field>
+                  </div>
+                </v-col>
+                <v-col>
+                  <div class="app-form-group">
+                    <v-text-field
+                      class="app-form-item"
+                      outlined
+                      v-model="form.filling_start_time"
+                      :rules="form.sendTypeStatus === '2' ? rules.required : []"
+                      label="Dolum Başlangıç Saati"
+                      type="time"
+                      required
+                    ></v-text-field>
+                  </div>
+                </v-col>
+              </v-row>
+
+
+              <v-row>
+                <v-col>
+                  <div class="app-form-group">
+                    <v-text-field
+                      class="app-form-item"
+                      outlined
+                      v-model="form.expedition_start_date"
+                      :rules="form.sendTypeStatus === '2' ? rules.required : []"
+                      label="Sefer Başlangıç Tarihi"
+                      type="date"
+                      required
+                    ></v-text-field>
+                  </div>
+                </v-col>
+                <v-col>
+                  <div class="app-form-group">
+                    <v-text-field
+                      class="app-form-item"
+                      outlined
+                      v-model="form.expedition_start_time"
+                      :rules="form.sendTypeStatus === '2' ? rules.required : []"
+                      label="Sefer Başlangıç Saati"
+                      type="time"
+                      required
+                    ></v-text-field>
+                  </div>
+                </v-col>
+              </v-row>
+
+
+              <v-row>
+                <v-col>
+                  <div class="app-form-group">
+                    <v-text-field
+                      class="app-form-item"
+                      outlined
+                      v-model="form.expedition_end_date"
+                      :rules="form.sendTypeStatus === '2' ? rules.required : []"
+                      label="Sefer Bitiş Tarihi"
+                      type="date"
+                      required
+                    ></v-text-field>
+                  </div>
+                </v-col>
+                <v-col>
+                  <div class="app-form-group">
+                    <v-text-field
+                      class="app-form-item"
+                      outlined
+                      v-model="form.expedition_end_time"
+                      :rules="form.sendTypeStatus === '2' ? rules.required : []"
+                      label="Sefer Bitiş Saati"
+                      type="time"
+                      required
+                    ></v-text-field>
+                  </div>
+                </v-col>
+              </v-row>
+
+
+              <div class="app-form-group">
+                <v-text-field
+                  class="app-form-item"
+                  outlined
+                  v-model="form.load_quantity"
+                  :rules="form.sendTypeStatus === '2' ? rules.required : []"
+                  label="Yük Miktarı"
+                  type="number"
+                ></v-text-field>
+              </div>
+
+            </div>
+
+
 
             <div class="app-form-submit">
               <v-btn @click="submit()"
@@ -308,6 +372,8 @@
           trailer_id: '', // nullable
           driver_id_1: '', // required
           driver_id_2: '', // nullable
+          filling_start_date: '', // required - format: dd/mm/yyyy
+          filling_start_time: '', // required - format: HH/mm
           expedition_start_date: '', // required - format: dd/mm/yyyy
           expedition_start_time: '', // required - format: HH/mm
           expedition_end_date: '', // required - format: dd/mm/yyyy
@@ -320,6 +386,7 @@
           load_quantity: '', // required
           dangerous_goods_transport_type_id: '',
           unId: '', // required
+          sendTypeStatus: '1',
         },
         rules: {
           required: [

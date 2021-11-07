@@ -41,6 +41,13 @@
             @click:row="clickRow"
             class="app-table"
           >
+
+
+            <template v-slot:item.sendTypeStatus="{ item }">
+              <span v-if="item.sendTypeStatus === '1'">Sürücü Onay</span>
+              <span else-if="item.sendTypeStatus === '2'">Bildirildi</span>
+            </template>
+
             <template v-slot:item.action="{ item }">
               <div style="display: flex;">
 
@@ -289,6 +296,7 @@
           headers: [
             {text: 'Aksiyon', value: 'action', width: '15%'},
             {text: 'No', value: 'id'},
+            {text: 'Durum', value: 'sendTypeStatus'},
             {text: 'Sürücü', value: 'driver_1'},
             {text: 'Plaka', value: 'plaque_1'},
             {text: 'Sefer Bitiş', value: 'expedition_end_date'},
