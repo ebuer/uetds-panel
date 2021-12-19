@@ -306,11 +306,11 @@
           }
         ],
         driverItems: [
-          {
-            icon: 'mdi-apps',
-            title: 'Anasayfa',
-            to: '/'
-          },
+          // {
+          //   icon: 'mdi-apps',
+          //   title: 'Anasayfa',
+          //   to: '/'
+          // },
           {
             icon: 'mdi-map-check',
             title: 'Seferler',
@@ -352,8 +352,7 @@
 
       const info = this.$userInfo()
 
-
-      if (info !== undefined) {
+      if (Object.keys(info).length !== 0) {
 
         if (info.user_type === 'admin') {
           this.$axios.post('check-user-information')

@@ -211,36 +211,35 @@
             </v-alert>
 
 
-<!--            // v-if-->
             <div class="mt-10">
-              <v-row>
-                <v-col>
-                  <div class="app-form-group">
-                    <v-text-field
-                      class="app-form-item"
-                      outlined
-                      v-model="form.filling_start_date"
-                      :rules="form.sendTypeStatus === '2' ? rules.required : []"
-                      label="Dolum Başlangıç Tarihi"
-                      type="date"
-                      required
-                    ></v-text-field>
-                  </div>
-                </v-col>
-                <v-col>
-                  <div class="app-form-group">
-                    <v-text-field
-                      class="app-form-item"
-                      outlined
-                      v-model="form.filling_start_time"
-                      :rules="form.sendTypeStatus === '2' ? rules.required : []"
-                      label="Dolum Başlangıç Saati"
-                      type="time"
-                      required
-                    ></v-text-field>
-                  </div>
-                </v-col>
-              </v-row>
+<!--              <v-row>-->
+<!--                <v-col>-->
+<!--                  <div class="app-form-group">-->
+<!--                    <v-text-field-->
+<!--                      class="app-form-item"-->
+<!--                      outlined-->
+<!--                      v-model="form.filling_start_date"-->
+<!--                      :rules="form.sendTypeStatus === '2' ? rules.required : []"-->
+<!--                      label="Dolum Başlangıç Tarihi"-->
+<!--                      type="date"-->
+<!--                      required-->
+<!--                    ></v-text-field>-->
+<!--                  </div>-->
+<!--                </v-col>-->
+<!--                <v-col>-->
+<!--                  <div class="app-form-group">-->
+<!--                    <v-text-field-->
+<!--                      class="app-form-item"-->
+<!--                      outlined-->
+<!--                      v-model="form.filling_start_time"-->
+<!--                      :rules="form.sendTypeStatus === '2' ? rules.required : []"-->
+<!--                      label="Dolum Başlangıç Saati"-->
+<!--                      type="time"-->
+<!--                      required-->
+<!--                    ></v-text-field>-->
+<!--                  </div>-->
+<!--                </v-col>-->
+<!--              </v-row>-->
 
 
               <v-row>
@@ -372,8 +371,8 @@
           trailer_id: '', // nullable
           driver_id_1: '', // required
           driver_id_2: '', // nullable
-          filling_start_date: '', // required - format: dd/mm/yyyy
-          filling_start_time: '', // required - format: HH/mm
+          // filling_start_date: '', // required - format: dd/mm/yyyy
+          // filling_start_time: '', // required - format: HH/mm
           expedition_start_date: '', // required - format: dd/mm/yyyy
           expedition_start_time: '', // required - format: HH/mm
           expedition_end_date: '', // required - format: dd/mm/yyyy
@@ -385,7 +384,7 @@
           load_quantity_unit: '', // required
           load_quantity: '', // required
           dangerous_goods_transport_type_id: '',
-          unId: '', // required
+          unId: '120300', // required
           sendTypeStatus: '1',
         },
         rules: {
@@ -508,6 +507,12 @@
 
             Object.keys(self.form).forEach(itemKey => {
 
+              // if(itemKey === 'unId' ||
+              //   itemKey === 'load_quantity' ||
+              //   itemKey === 'dangerous_goods_transport_type_id' ||
+              //   itemKey === 'sendTypeStatus' ||
+              // itemKey === 'load_type_id') self.form[itemKey] = parseInt(self.form[itemKey])
+
               let status = true;
 
               if (itemKey === 'dangerous_goods_transport_type_id' && (self.form.transport_type_code_id !== 1)) status = false;
@@ -539,7 +544,13 @@
                       self.$router.push(self.moduleInfo.routeAfterSuccess)
                     })
                   } else {
-                    self.error.push('Bilgileriniz kontrol edin.')
+                    console.log('dddd', res)
+                    if(res.data.result !== undefined) {
+                      self.error.push(res.data.result)
+                    }else {
+                      self.error.push('Bilgileriniz kontrol edin.')
+                    }
+
                     self.loader = false;
                   }
 

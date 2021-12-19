@@ -7,7 +7,9 @@ export default function ({$auth, app, redirect}) {
 
       if (to.path === '/') redirect('/');
 
-      if ($auth.$state.user[0].user_type !== 'admin' && !allowedDriverPaths.includes(to.path)) setTimeout(() => redirect('/'));
+      if ($auth.$state.user[0].user_type !== 'admin' && !allowedDriverPaths.includes(to.path)) setTimeout(() => redirect('/drivers/expeditions'));
+
+      if ($auth.$state.user[0].user_type !== 'admin' && to.path === '/') setTimeout(() => redirect('/drivers/expeditions'));
 
     }
     // if (to.path === '/' && $auth.loggedIn) {

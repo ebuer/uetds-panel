@@ -89,7 +89,7 @@
                              dense
                              text
                              transition="fade-transition"
-                    > Hata! {{ item}}
+                    > Hata! {{ item }}
                     </v-alert>
                   </div>
                 </div>
@@ -165,7 +165,7 @@
                              dense
                              text
                              transition="fade-transition"
-                    > Hata! {{ item}}
+                    > Hata! {{ item }}
                     </v-alert>
                   </div>
                 </div>
@@ -183,196 +183,199 @@
 </template>
 
 <script>
-  export default {
-    layout: "empty",
-    name: 'login',
-    data() {
-      return {
-        buttonLoader: false,
-        tab: 'login',
-        error: {
-          login: [],
-          register: []
-        },
-        image: require(`~/assets/images/way.jpg`),
-        valid: false,
-        nameRules: [
-          v => !!v.trim() || 'İsim Zorunludur',
-        ],
-        passwordRules: [
-          v => !!v.trim() || 'Şifre Zorunludur',
-        ],
-        emailRules: [
-          v => !!v.trim() || 'E-posta veya TC Zorunludur',
-          // v => /.+@.+/.test(v) || 'Geçerli E-posta giriniz',
-        ],
-        loginForm: {
-          email: 'test@test.com',
-          password: 'test123',
-        },
-        registerForm: {
-          email: 'test1@testuetds.com',
-          password: '1234',
-          name: 'test',
-        },
-        loginSubmitting: false,
-        registerSubmitting: false,
+export default {
+  layout: "empty",
+  name: 'login',
+  data() {
+    return {
+      buttonLoader: false,
+      tab: 'login',
+      error: {
+        login: [],
+        register: []
+      },
+      image: require(`~/assets/images/way.jpg`),
+      valid: false,
+      nameRules: [
+        v => !!v.trim() || 'İsim Zorunludur',
+      ],
+      passwordRules: [
+        v => !!v.trim() || 'Şifre Zorunludur',
+      ],
+      emailRules: [
+        v => !!v.trim() || 'E-posta veya TC Zorunludur',
+        // v => /.+@.+/.test(v) || 'Geçerli E-posta giriniz',
+      ],
+      loginForm: {
+        email: 'test@test.com',
+        password: 'test123',
+      },
+      registerForm: {
+        email: 'test1@testuetds.com',
+        password: '1234',
+        name: 'test',
+      },
+      loginSubmitting: false,
+      registerSubmitting: false,
+    }
+  },
+  methods: {
+    submit() {
+      const self = this;
+      if (!self.loginSubmitting) {
+        self.resetError()
+        const valid = this.$refs.loginForm.validate();
+        if (valid) {
+          self.loginSubmitting = true
+          self.buttonLoader = true;
+          this.$auth.loginWith('local', {data: this.loginForm})
+            .then((res) => {
+              self.buttonLoader = false
+              setTimeout(() => self.loginSubmitting = false, 500)
+              self.$router.push('/')
+            })
+            .catch(err => {
+              self.error.login.push('Bilgileriniz uyuşmuyor.')
+              self.buttonLoader = false
+              self.loginSubmitting = false
+            })
+        }
       }
     },
-    methods: {
-      submit() {
-        const self = this;
-        if (!self.loginSubmitting) {
-          self.resetError()
-          const valid = this.$refs.loginForm.validate();
-          if (valid) {
-            self.loginSubmitting = true
-            self.buttonLoader = true;
-            this.$auth.loginWith('local', {data: this.loginForm})
-              .then((res) => {
-                self.buttonLoader = false
-                setTimeout(() => self.loginSubmitting = false, 500)
-              })
-              .catch(err => {
-                self.error.login.push('Bilgileriniz uyuşmuyor.')
-                self.buttonLoader = false
-                self.loginSubmitting = false
-              })
-          }
-        }
-      },
-      register() {
-        const self = this;
+    register() {
+      const self = this;
 
-        if (!self.registerSubmitting) {
-          self.resetError()
+      if (!self.registerSubmitting) {
+        self.resetError()
 
-          const valid = this.$refs.registerForm.validate();
+        const valid = this.$refs.registerForm.validate();
 
-          if (valid) {
-            self.buttonLoader = true;
-            self.registerSubmitting = true
-            self.$axios.post('register', self.registerForm)
-              .then(res => {
-                const errors = res.data.error
+        if (valid) {
+          self.buttonLoader = true;
+          self.registerSubmitting = true
+          self.$axios.post('register', self.registerForm)
+            .then(res => {
+              const errors = res.data.error
+              if (errors !== undefined) {
+                Object.keys(errors).forEach(item => {
+                  self.error.register.push(errors[item][0])
+                })
+              } else {
+                this.$auth.loginWith('local', {
+                  data: {
+                    email: self.registerForm.email,
+                    password: self.registerForm.password,
+                  }
+                }).then(res => {
+                  self.$router.push('/')
+                })
+              }
+
+              self.buttonLoader = false;
+              setTimeout(() => self.registerSubmitting = false, 500)
+
+            })
+            .catch(err => {
+              if (err.response !== undefined) {
+                const errors = err.response.data.errors
                 if (errors !== undefined) {
                   Object.keys(errors).forEach(item => {
                     self.error.register.push(errors[item][0])
                   })
-                } else {
-                  this.$auth.loginWith('local', {
-                    data: {
-                      email: self.registerForm.email,
-                      password: self.registerForm.password,
-                    }
-                  })
                 }
+              } else {
+                this.error.register.push('Bilgileriniz kontrol edin.')
+              }
 
-                self.buttonLoader = false;
-                setTimeout(() => self.registerSubmitting = false, 500)
-
-              })
-              .catch(err => {
-                if (err.response !== undefined) {
-                  const errors = err.response.data.errors
-                  if (errors !== undefined) {
-                    Object.keys(errors).forEach(item => {
-                      self.error.register.push(errors[item][0])
-                    })
-                  }
-                } else {
-                  this.error.register.push('Bilgileriniz kontrol edin.')
-                }
-
-                self.buttonLoader = false;
-                this.error.register.show = true
-                self.registerSubmitting = false
-              })
-          }
+              self.buttonLoader = false;
+              this.error.register.show = true
+              self.registerSubmitting = false
+            })
         }
-
-      },
-      resetError() {
-        this.error.login = [];
-        this.error.register = [];
       }
+
+    },
+    resetError() {
+      this.error.login = [];
+      this.error.register = [];
     }
   }
+}
 </script>
 
 <style lang="scss" scoped>
 
-  .fade-enter-active, .fade-leave-active {
-    transition: opacity .5s;
-  }
+.fade-enter-active, .fade-leave-active {
+  transition: opacity .5s;
+}
 
-  .fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */
-  {
-    opacity: 0;
-  }
+.fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */
+{
+  opacity: 0;
+}
 
-  .app-login {
-    .login-content {
-      display: flex;
-      background-color: #f2f5f8;
-      min-height: 100vh;
+.app-login {
+  .login-content {
+    display: flex;
+    background-color: #f2f5f8;
+    min-height: 100vh;
 
-      .left {
-        position: relative;
-        width: 30%;
-        background-color: #ffffff;
-        border-color: #ffffff;
-        box-shadow: 0 0 0 0 rgb(85 85 85 / 8%), 0 0 0 0 rgb(85 85 85 / 6%), 0 0 0 0 rgb(85 85 85 / 3%);
-        padding: 20px;
-        background-size: cover;
-        background-position: bottom;
-        background-repeat: no-repeat;
+    .left {
+      position: relative;
+      width: 30%;
+      background-color: #ffffff;
+      border-color: #ffffff;
+      box-shadow: 0 0 0 0 rgb(85 85 85 / 8%), 0 0 0 0 rgb(85 85 85 / 6%), 0 0 0 0 rgb(85 85 85 / 3%);
+      padding: 20px;
+      background-size: cover;
+      background-position: bottom;
+      background-repeat: no-repeat;
 
-        .overlay {
-          position: absolute;
-          top: 0;
-          left: 0;
-          right: 0;
-          bottom: 0;
-          z-index: 1;
-          background-color: rgba(0, 0, 0, 0.5);
-        }
-
-
-        .top {
-          position: relative;
-          z-index: 2;
-
-          .title {
-            font-size: 3rem !important;
-            font-weight: 600 !important;
-            color: #f89854;
-            line-height: 4rem;
-          }
-
-          .subtitle {
-            padding-top: 15px;
-          }
-        }
+      .overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        z-index: 1;
+        background-color: rgba(0, 0, 0, 0.5);
       }
 
-      .right {
-        width: 70%;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        position: relative;
-        overflow: hidden;
 
-        .truck {
-          opacity: 0.09;
-          font-size: 400px;
-          position: absolute;
-          bottom: -100px;
-          left: -100px;
+      .top {
+        position: relative;
+        z-index: 2;
+
+        .title {
+          font-size: 3rem !important;
+          font-weight: 600 !important;
+          color: #f89854;
+          line-height: 4rem;
+        }
+
+        .subtitle {
+          padding-top: 15px;
         }
       }
-
     }
+
+    .right {
+      width: 70%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      position: relative;
+      overflow: hidden;
+
+      .truck {
+        opacity: 0.09;
+        font-size: 400px;
+        position: absolute;
+        bottom: -100px;
+        left: -100px;
+      }
+    }
+
   }
+}
 </style>

@@ -83,7 +83,7 @@
         rules: {
           required: [
             v => !!v.trim() || 'Plaka Zorunludur',
-            v => plaqueReg.test(v) || 'Plakaya Uygun Format Girin'
+            // v => plaqueReg.test(v) || 'Plakaya Uygun Format Girin'
           ],
         }
       }

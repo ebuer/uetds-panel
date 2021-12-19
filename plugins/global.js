@@ -19,7 +19,7 @@ export default (context, inject) => {
   };
 
   const userInfo = () => {
-    return context.$auth.user !== undefined && (context.$auth.user.length > 0) ? context.$auth.user[0] : {}
+    return context.$auth.user && (context.$auth.user.length > 0) ? context.$auth.user[0] : {}
   };
 
   inject('createRequest', createRequest);

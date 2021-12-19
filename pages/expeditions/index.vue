@@ -7,7 +7,6 @@
 
       <!--      </v-toolbar>-->
 
-
       <div class="app-list">
         <v-card style="box-shadow: none; padding: 0">
           <v-card-title>
@@ -44,8 +43,8 @@
 
 
             <template v-slot:item.sendTypeStatus="{ item }">
-              <span v-if="item.sendTypeStatus === '1'">Sürücü Onay</span>
-              <span else-if="item.sendTypeStatus === '2'">Bildirildi</span>
+              <span v-if="item.sendTypeStatus === '1'">Sürücü Onay Bekleniyor</span>
+              <span v-else-if="item.sendTypeStatus === '2'">Bildirildi</span>
             </template>
 
             <template v-slot:item.action="{ item }">

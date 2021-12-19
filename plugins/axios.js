@@ -11,11 +11,13 @@ export default function ({$axios, redirect, $auth}) {
   };
   $axios.onError(error => {
     if (typeof error.response !== 'undefined') {
-      if (error.response.status === 401 || error.response.status === 500) {
+      if (error.response.status === 401) {
         if ($auth.loggedIn) {
           $auth.logout();
         }
         redirect('/login')
+      } else if (error.response.status === 500) {
+        // tODO server error
       }
     } else {
       console.log('CORS Problem!');

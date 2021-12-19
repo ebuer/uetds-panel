@@ -5,7 +5,7 @@ import tr from 'vuetify/src/locale/tr'
 export default {
   // Target: https://go.nuxtjs.dev/config-target
   target: 'static',
-
+  ssr: false,
   // Global page headers: https://go.nuxtjs.dev/config-head
   head: {
     titleTemplate: '%s - uetds-panel',
@@ -53,13 +53,19 @@ export default {
   },
 
   axios: {
-    baseURL: process.env.baseURL,
+    baseURL:process.env.baseURL || 'http://test.gold-trace.com',
     redirectError: {
       401: '/login',
       404: '/error',
       403: '/login',
       203: '/login'
     }
+  },
+  router: {
+    middleware: ['auth'],
+    base: '/',
+    linkActiveClass: '',
+    linkExactActiveClass: 'active',
   },
   auth: {
     strategies: {
