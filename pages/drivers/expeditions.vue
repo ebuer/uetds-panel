@@ -400,6 +400,7 @@
                         label="Yük Miktarı"
                         type="number"
                       ></v-text-field>
+<!--                      TODO yük m,ktarı yanına Litre vs olacak (backend den gelecek)-->
                     </div>
                   </v-col>
                 </v-row>

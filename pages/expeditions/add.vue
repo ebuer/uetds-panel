@@ -308,7 +308,7 @@
                   outlined
                   v-model="form.load_quantity"
                   :rules="form.sendTypeStatus === '2' ? rules.required : []"
-                  label="Yük Miktarı"
+                  :label="'Yük Miktarı ' + getUnitText(form.load_quantity_unit)"
                   type="number"
                 ></v-text-field>
               </div>
@@ -481,6 +481,12 @@
 
     },
     methods: {
+      getUnitText(val) {
+        const self = this;
+        const findItem = self.selectItems.loadQuantityUnits.find(x => x.kodu === val);
+
+        return findItem ? '(' + findItem['aciklama'] + ')' : ''
+      },
       openPicker() {
         this.$refs['picker'].initPicker()
       },

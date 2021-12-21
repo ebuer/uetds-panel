@@ -46,8 +46,11 @@
 
 
             <template v-slot:item.sendTypeStatus="{ item }">
-              <span v-if="item.sendTypeStatus === '1'">Sürücü Onay Bekleniyor</span>
-              <span v-else-if="item.sendTypeStatus === '2'">Bildirildi</span>
+              <span v-if="item.isSendService === '0'">
+                <span v-if="item.sendTypeStatus === '1'">Sürücü Onayı Bekleniyor</span>
+                <span v-else>Bildirilmedi</span>
+              </span>
+              <span v-else-if="item.isSendService === '1'">Bildirildi</span>
             </template>
 
             <template v-slot:item.action="{ item }">
@@ -94,6 +97,28 @@
 
                   </template>
                   <span>Düzenle</span>
+                </v-tooltip>
+
+                <v-tooltip top v-if="item.isSendService === '1'">
+                  <template v-slot:activator="{ on, attrs }">
+                    <v-btn
+                      v-bind="attrs"
+                      v-on="on"
+                      class="mx-2"
+                      fab
+                      dark
+                      x-small
+                      color="gray"
+                      :href="'http://test.gold-trace.com/uploads/'+ item.seferId +'.pdf'"
+                      target="_blank"
+                    >
+                      <v-icon dark>
+                        mdi-file-pdf-box
+                      </v-icon>
+                    </v-btn>
+
+                  </template>
+                  <span>PDF Görüntüle</span>
                 </v-tooltip>
 
               </div>
