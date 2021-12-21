@@ -27,10 +27,13 @@
                 <v-spacer></v-spacer>
               </v-card-title>
               <v-data-table
-                :loading="tableSecond.loader"
+                :loading="table.loader"
                 :headers="tableSecond.headers"
                 :items="tableSecond.items"
                 :search="tableSecond.search"
+                :footer-props="{
+                  'items-per-page-options': [10, 20, 50, 100]
+                }"
                 :page.sync="tableSecond.pagination.current"
                 :items-per-page="tableSecond.pagination.itemsPerPage"
                 @page-count="tableSecond.pagination.pagLength = $event"
@@ -175,20 +178,20 @@
         <v-divider></v-divider>
 
         <v-card-actions v-if="detailDialog.item !== null">
-          <v-btn
-            color="red"
-            text
-            @click="deleteRow(detailDialog.item)"
-          >
-            Sil
-          </v-btn>
+          <!--          <v-btn-->
+          <!--            color="red"-->
+          <!--            text-->
+          <!--            @click="deleteRow(detailDialog.item)"-->
+          <!--          >-->
+          <!--            Sil-->
+          <!--          </v-btn>-->
 
           <v-btn
             color="primary"
             text
-            @click="editRow(detailDialog.item)"
+            @click="openConfirmForm(detailDialog.item)"
           >
-            Düzenle
+            Onayla
           </v-btn>
 
           <v-spacer></v-spacer>
@@ -272,146 +275,151 @@
           dark
           color="primary"
         >
-          <v-btn
-            icon
-            dark
-            @click="confirmDialog.open = false"
-            :disabled="confirmDialog.loader"
-          >
-            <v-icon>mdi-close</v-icon>
-          </v-btn>
+          <!--          <v-btn-->
+          <!--            icon-->
+          <!--            dark-->
+          <!--            @click="confirmDialog.open = false"-->
+          <!--            :disabled="confirmDialog.loader"-->
+          <!--          >-->
+          <!--            <v-icon>mdi-close</v-icon>-->
+          <!--          </v-btn>-->
           <v-toolbar-title>TİTLE</v-toolbar-title>
           <v-spacer></v-spacer>
           <v-toolbar-items>
             <v-btn
               dark
               text
-              @click="saveConfirmForm()"
+              @click="confirmDialog.open = false"
               :disabled="confirmDialog.loader"
             >
-              Kaydet
+              Kapat
             </v-btn>
           </v-toolbar-items>
         </v-toolbar>
         <v-card-text>
           <div class="app-create mt-5">
             <div class="app-form mt-5">
-              <v-row>
-                <v-col>
-                  <div class="app-form-group">
-                    <v-text-field
-                      class="app-form-item"
-                      outlined
-                      v-model="confirmDialog.form.loading_date"
-                      :rules="rules.required"
-                      label="Yükleme Tarihi"
-                      type="date"
-                      required
-                    ></v-text-field>
-                  </div>
-                </v-col>
+              <!--              <v-row>-->
+              <!--                <v-col>-->
+              <!--                  <div class="app-form-group">-->
+              <!--                    <v-text-field-->
+              <!--                      class="app-form-item"-->
+              <!--                      outlined-->
+              <!--                      v-model="confirmDialog.form.loading_date"-->
+              <!--                      :rules="rules.required"-->
+              <!--                      label="Yükleme Tarihi"-->
+              <!--                      type="date"-->
+              <!--                      required-->
+              <!--                    ></v-text-field>-->
+              <!--                  </div>-->
+              <!--                </v-col>-->
 
-                <v-col>
-                  <div class="app-form-group">
-                    <v-text-field
-                      class="app-form-item"
-                      outlined
-                      v-model="confirmDialog.form.loading_time"
-                      :rules="rules.required"
-                      label="Yükleme Saati"
-                      type="time"
-                      required
-                    ></v-text-field>
-                  </div>
-                </v-col>
-              </v-row>
-              <v-row>
-                <v-col>
-                  <div class="app-form-group">
-                    <v-text-field
-                      class="app-form-item"
-                      outlined
-                      v-model="confirmDialog.form.expedition_start_date"
-                      :rules="rules.required"
-                      label="Sefer Başlangıç Tarihi"
-                      type="date"
-                      required
-                    ></v-text-field>
-                  </div>
-                </v-col>
-                <v-col>
-                  <div class="app-form-group">
-                    <v-text-field
-                      class="app-form-item"
-                      outlined
-                      v-model="confirmDialog.form.expedition_start_time"
-                      :rules="rules.required"
-                      label="Sefer Başlangıç Saati"
-                      type="time"
-                      required
-                    ></v-text-field>
-                  </div>
-                </v-col>
-              </v-row>
+              <!--                <v-col>-->
+              <!--                  <div class="app-form-group">-->
+              <!--                    <v-text-field-->
+              <!--                      class="app-form-item"-->
+              <!--                      outlined-->
+              <!--                      v-model="confirmDialog.form.loading_time"-->
+              <!--                      :rules="rules.required"-->
+              <!--                      label="Yükleme Saati"-->
+              <!--                      type="time"-->
+              <!--                      required-->
+              <!--                    ></v-text-field>-->
+              <!--                  </div>-->
+              <!--                </v-col>-->
+              <!--              </v-row>-->
 
-              <v-row>
-                <v-col>
-                  <div class="app-form-group">
-                    <v-text-field
-                      class="app-form-item"
-                      outlined
-                      v-model="confirmDialog.form.expedition_end_date"
-                      :rules="rules.required"
-                      label="Sefer Bitiş Tarihi"
-                      type="date"
-                      required
-                    ></v-text-field>
-                  </div>
-                </v-col>
-                <v-col>
-                  <div class="app-form-group">
-                    <v-text-field
-                      class="app-form-item"
-                      outlined
-                      v-model="confirmDialog.form.expedition_end_time"
-                      :rules="rules.required"
-                      label="Sefer Bitiş Saati"
-                      type="time"
-                      required
-                    ></v-text-field>
-                  </div>
-                </v-col>
-              </v-row>
+              <v-form class="app-form" v-model="confirmDialog.validForm"
+                      ref="pageForm">
+                <v-row>
+                  <v-col>
+                    <div class="app-form-group">
+                      <v-text-field
+                        class="app-form-item"
+                        outlined
+                        v-model="confirmDialog.form.expedition_start_date"
+                        :rules="rules.required"
+                        label="Sefer Başlangıç Tarihi"
+                        type="date"
+                        required
+                      ></v-text-field>
+                    </div>
+                  </v-col>
+                  <v-col>
+                    <div class="app-form-group">
+                      <v-text-field
+                        class="app-form-item"
+                        outlined
+                        v-model="confirmDialog.form.expedition_start_time"
+                        :rules="rules.required"
+                        label="Sefer Başlangıç Saati"
+                        type="time"
+                        required
+                      ></v-text-field>
+                    </div>
+                  </v-col>
+                </v-row>
 
-              <v-row>
-                <v-col>
-                  <div class="app-form-group">
-                    <v-text-field
-                      class="app-form-item"
-                      outlined
-                      v-model="confirmDialog.form.load_quantity"
-                      :rules="rules.required"
-                      label="Yük Miktarı"
-                      type="number"
-                    ></v-text-field>
-                  </div>
-                </v-col>
-              </v-row>
+                <v-row>
+                  <v-col>
+                    <div class="app-form-group">
+                      <v-text-field
+                        class="app-form-item"
+                        outlined
+                        v-model="confirmDialog.form.expedition_end_date"
+                        :rules="rules.required"
+                        label="Sefer Bitiş Tarihi"
+                        type="date"
+                        required
+                      ></v-text-field>
+                    </div>
+                  </v-col>
+                  <v-col>
+                    <div class="app-form-group">
+                      <v-text-field
+                        class="app-form-item"
+                        outlined
+                        v-model="confirmDialog.form.expedition_end_time"
+                        :rules="rules.required"
+                        label="Sefer Bitiş Saati"
+                        type="time"
+                        required
+                      ></v-text-field>
+                    </div>
+                  </v-col>
+                </v-row>
+
+                <v-row>
+                  <v-col>
+                    <div class="app-form-group">
+                      <v-text-field
+                        class="app-form-item"
+                        outlined
+                        v-model="confirmDialog.form.load_quantity"
+                        :rules="rules.required"
+                        label="Yük Miktarı"
+                        type="number"
+                      ></v-text-field>
+                    </div>
+                  </v-col>
+                </v-row>
+
+
+                <div class="mt-5">
+                  <v-btn
+                    color="primary"
+                    style="width: 100%"
+                    @click="saveConfirmForm()"
+                    :disabled="confirmDialog.loader"
+                    :loading="confirmDialog.loader">Kaydet
+                  </v-btn>
+                </div>
+              </v-form>
 
             </div>
           </div>
 
         </v-card-text>
-        <v-card-actions>
-          <v-spacer></v-spacer>
-          <v-btn
-            color="primary"
-            style="width: 100%"
-            @click="saveConfirmForm()"
-            :disabled="confirmDialog.loader"
-            :loading="confirmDialog.loader">Kaydet</v-btn>
-          <v-spacer></v-spacer>
-        </v-card-actions>
       </v-card>
     </v-dialog>
 
@@ -481,7 +489,6 @@ export default {
         item: null
       },
       table: {
-        // TODO tab system
         endpoint: 'driver/expedition', // -> sürücünü yaptığı tüm sevkiyatlar
         // endpoint: 'driver/wait-for-check-expedition', // -> sürücünü den onay yapamsı beklenen
         pagination: {
@@ -492,7 +499,7 @@ export default {
         search: '',
         loader: true,
         headers: [
-          {text: 'Aksiyon', value: 'action', width: '15%'},
+          // {text: 'Aksiyon', value: 'action', width: '15%'},
           {text: 'No', value: 'id'},
           {text: 'Sürücü', value: 'driver_1'},
           {text: 'Plaka', value: 'plaque_1'},
@@ -520,11 +527,12 @@ export default {
       },
       confirmDialog: {
         open: false,
+        validForm: false,
         selected: null,
         loader: false,
         form: {
-          loading_date: '',
-          loading_time: '', // required yükleme zamanı - format: dd/mm/yyyy
+          // loading_date: '',
+          // loading_time: '', // required yükleme zamanı - format: dd/mm/yyyy
           expedition_start_date: '', // required - format: dd/mm/yyyy
           expedition_start_time: '', // required - format: HH/mm
           expedition_end_date: '', // required - format: dd/mm/yyyy
@@ -555,6 +563,8 @@ export default {
     fetchData() {
       const self = this;
 
+      // self.tableSecond.items = [];
+      // self.table.items = [];
       self.table.loader = true
 
       const waitingReq = self.$axios.$get(self.tableSecond.endpoint);
@@ -565,6 +575,7 @@ export default {
       ]).then(res => {
         self.tableSecond.items = res[0].data;
         self.table.items = res[1].data;
+        self.$forceUpdate();
 
         setTimeout(() => {
           self.tableSecond.loader = false
@@ -648,30 +659,61 @@ export default {
     },
     openConfirmForm(item) {
       const self = this;
+      console.log('ooo', self.confirmDialog.form)
+      console.log('iii', item)
       self.confirmDialog.selected = item;
+
+      Object.keys(self.confirmDialog.form).forEach(itemKey => {
+        const dataItem = item.load_detail[itemKey] !== undefined ? item.load_detail[itemKey] : item[itemKey]
+        if (dataItem) self.confirmDialog.form[itemKey] = dataItem;
+        self.$forceUpdate();
+      })
+
       setTimeout(() => self.confirmDialog.open = true);
     },
     saveConfirmForm() {
       const self = this;
 
-      const id = self.confirmDialog.selected.id // TODO check this
+
+      const valid = this.$refs.pageForm.validate();
+
+
+      if(!valid) return
+
+      const id = self.confirmDialog.selected.id
+
       self.confirmDialog.loader = true;
       self.$axios.$put('driver/expedition/' + id, self.confirmDialog.form)
         .then(res => {
           console.log('RRRR', res)
 
-          if(res.status) {
-            // TODO success message
+          if (res.status) {
+
+            self.$store.dispatch('openSnackbar', {
+              text: id + ' Nolu Sefer Onaylanmıştır'
+            });
             self.fetchData();
-            setTimeout(() => self.confirmDialog.open = false)
-          }else {
-            // todo errır message
+
+            setTimeout(() => {
+              self.confirmDialog.open = false
+              self.detailDialog.open = false
+            })
+          } else {
+
+            self.$store.dispatch('openSnackbar', {
+              type: 'error',
+              text: 'Bir hata oluştu lütfen bilgilerinizi kontrol ediniz'
+            });
           }
           self.confirmDialog.loader = false;
 
         })
         .catch(err => {
-          // todo errır message
+          self.confirmDialog.loader = false;
+          self.$store.dispatch('openSnackbar', {
+            type: 'error',
+            text: 'Bir hata oluştu lütfen bilgilerinizi kontrol ediniz'
+          });
         })
 
     },

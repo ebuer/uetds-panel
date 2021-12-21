@@ -19,7 +19,7 @@
             ></v-text-field>
             <v-spacer></v-spacer>
             <v-btn color="primary" dark class="mb-2" @click="$router.push(moduleInfo.createRoute)">
-              {{moduleInfo.createText}}
+              {{ moduleInfo.createText }}
 
               <v-icon
                 right
@@ -34,6 +34,9 @@
             :headers="table.headers"
             :items="table.items"
             :search="table.search"
+            :footer-props="{
+              'items-per-page-options': [10, 20, 50, 100]
+            }"
             :page.sync="table.pagination.current"
             :items-per-page="table.pagination.itemsPerPage"
             @page-count="table.pagination.pagLength = $event"
@@ -178,7 +181,7 @@
         :loading="deleteDialog.loader"
         loader-height="7">
         <v-card-title class="text-h5">
-          <div class="text-center" style="width: 100%">{{deleteDialog.options.title}}</div>
+          <div class="text-center" style="width: 100%">{{ deleteDialog.options.title }}</div>
         </v-card-title>
 
         <v-card-text>
@@ -187,7 +190,7 @@
             <v-icon style="font-size: 70px" color="red">mdi-close-circle-outline</v-icon>
           </div>
           <div class="text-center pt-3">
-            <b>{{deleteDialog.options.showText}}</b>
+            <b>{{ deleteDialog.options.showText }}</b>
           </div>
         </v-card-text>
 
@@ -226,179 +229,179 @@
 </template>
 
 <script>
-  export default {
-    name: 'drivers',
-    data() {
-      return {
-        moduleInfo: {
-          title: 'Seferler',
-          createRoute: '/expeditions/add',
-          editRoute: '/expeditions/',
-          createText: 'Sefer Oluştur'
-        },
-        deleteDialog: {
-          open: false,
-          deleteItem: null,
-          loader: false,
-          options: {
-            endpoint: 'expeditions/delete',
-            endpointVal: 'id',
-            title: 'Silme İşlemi',
-            text: '{id} Nolu Seferi Silmek istediğinize emin misiniz?',
-            showText: '',
-            successText: '{id} Nolu Sefer Silinmiştir',
-          }
-        },
-        detailDialog: {
-          open: false,
-          options: [
-            {
-              title: 'No',
-              value: 'id'
-            },
-            {
-              title: 'Sürücü',
-              value: 'driver_1'
-            },
-            {
-              title: '2.Sürücü',
-              value: 'driver_2'
-            },
-            {
-              title: 'Sefer Başlangıç Tarihi',
-              value: 'expedition_start_date'
-            },
-            {
-              title: 'Sefer Başlangıç Saati',
-              value: 'expedition_start_time'
-            },
-            {
-              title: 'Sefer Bitiş Tarihi',
-              value: 'expedition_end_date'
-            },
-            {
-              title: 'Sefer Bitiş Saati',
-              value: 'expedition_end_time'
-            },
-          ],
-          item: null
-        },
-        table: {
-          endpoint: 'expeditions',
-          pagination: {
-            current: 1,
-            pagLength: 0,
-            itemsPerPage: 10,
-          },
-          search: '',
-          loader: true,
-          headers: [
-            {text: 'Aksiyon', value: 'action', width: '15%'},
-            {text: 'No', value: 'id'},
-            {text: 'Durum', value: 'sendTypeStatus'},
-            {text: 'Sürücü', value: 'driver_1'},
-            {text: 'Plaka', value: 'plaque_1'},
-            {text: 'Sefer Bitiş', value: 'expedition_end_date'},
-          ],
-          items: []
-        },
-      }
-    },
-    created() {
-      const self = this;
-      self.fetchData()
-    },
-    methods: {
-      fetchData() {
-        const self = this;
-
-        self.table.loader = true
-
-        self.$axios.get(self.table.endpoint)
-          .then(res => {
-
-            self.table.items = res.data.data;
-
-            setTimeout(() => {
-              self.table.loader = false
-
-            }, 500)
-          })
+export default {
+  name: 'drivers',
+  data() {
+    return {
+      moduleInfo: {
+        title: 'Seferler',
+        createRoute: '/expeditions/add',
+        editRoute: '/expeditions/',
+        createText: 'Sefer Oluştur'
       },
-      clickRow(item) {
-        const self = this;
-        self.detailDialog.item = item
-        setTimeout(() => self.detailDialog.open = true)
-      },
-      deleteRow(item) {
-        const self = this;
-
-        self.deleteDialog.options.showText = self.getScopedVal(item, self.deleteDialog.options.text)
-
-        self.deleteDialog.deleteItem = item;
-
-        setTimeout(() => {
-          self.deleteDialog.open = true
-        }, 200)
-
-      },
-      getScopedVal(item, text) {
-
-        let returnText = text
-
-        if (text.includes('{') && text.includes('}')) {
-          const getkey = text.split('{')[1].split('}');
-          const restText = getkey[1]
-          const getVal = item[getkey[0]];
-          if (getkey !== undefined) {
-            returnText = getVal + restText;
-          }
+      deleteDialog: {
+        open: false,
+        deleteItem: null,
+        loader: false,
+        options: {
+          endpoint: 'expeditions/delete',
+          endpointVal: 'id',
+          title: 'Silme İşlemi',
+          text: '{id} Nolu Seferi Silmek istediğinize emin misiniz?',
+          showText: '',
+          successText: '{id} Nolu Sefer Silinmiştir',
         }
-
-        return returnText
-
       },
-      deleteData(item) {
-        const self = this;
-
-        self.deleteDialog.loader = true;
-
-        const val = item[self.deleteDialog.options.endpointVal];
-
-
-        self.$axios.delete(self.deleteDialog.options.endpoint + '/' + val,)
-          .then(res => {
-
-            setTimeout(() => {
-
-              self.deleteDialog.open = false
-              self.deleteDialog.loader = false;
-
-              // if click from detail modal
-              self.detailDialog.open = false
-
-              if (res.data.deletedId !== undefined) {
-                self.fetchData();
-                const succesText = self.getScopedVal(item, self.deleteDialog.options.successText)
-                self.$store.dispatch('openSnackbar', {
-                  text: succesText
-                });
-              } else {
-                self.$store.dispatch('openSnackbar', {
-                  text: 'Bir Hata oluştu',
-                  type: 'error'
-                });
-              }
-
-
-            })
-
-          })
+      detailDialog: {
+        open: false,
+        options: [
+          {
+            title: 'No',
+            value: 'id'
+          },
+          {
+            title: 'Sürücü',
+            value: 'driver_1'
+          },
+          {
+            title: '2.Sürücü',
+            value: 'driver_2'
+          },
+          {
+            title: 'Sefer Başlangıç Tarihi',
+            value: 'expedition_start_date'
+          },
+          {
+            title: 'Sefer Başlangıç Saati',
+            value: 'expedition_start_time'
+          },
+          {
+            title: 'Sefer Bitiş Tarihi',
+            value: 'expedition_end_date'
+          },
+          {
+            title: 'Sefer Bitiş Saati',
+            value: 'expedition_end_time'
+          },
+        ],
+        item: null
       },
-      editRow(item) {
-        const self = this;
-        self.$router.push(self.moduleInfo.editRoute + item.id)
+      table: {
+        endpoint: 'expeditions',
+        pagination: {
+          current: 1,
+          pagLength: 0,
+          itemsPerPage: 10,
+        },
+        search: '',
+        loader: true,
+        headers: [
+          {text: 'Aksiyon', value: 'action', width: '15%'},
+          {text: 'No', value: 'id'},
+          {text: 'Durum', value: 'sendTypeStatus'},
+          {text: 'Sürücü', value: 'driver_1'},
+          {text: 'Plaka', value: 'plaque_1'},
+          {text: 'Sefer Bitiş', value: 'expedition_end_date'},
+        ],
+        items: []
       },
     }
+  },
+  created() {
+    const self = this;
+    self.fetchData()
+  },
+  methods: {
+    fetchData() {
+      const self = this;
+
+      self.table.loader = true
+
+      self.$axios.get(self.table.endpoint)
+        .then(res => {
+
+          self.table.items = res.data.data;
+
+          setTimeout(() => {
+            self.table.loader = false
+
+          }, 500)
+        })
+    },
+    clickRow(item) {
+      const self = this;
+      self.detailDialog.item = item
+      setTimeout(() => self.detailDialog.open = true)
+    },
+    deleteRow(item) {
+      const self = this;
+
+      self.deleteDialog.options.showText = self.getScopedVal(item, self.deleteDialog.options.text)
+
+      self.deleteDialog.deleteItem = item;
+
+      setTimeout(() => {
+        self.deleteDialog.open = true
+      }, 200)
+
+    },
+    getScopedVal(item, text) {
+
+      let returnText = text
+
+      if (text.includes('{') && text.includes('}')) {
+        const getkey = text.split('{')[1].split('}');
+        const restText = getkey[1]
+        const getVal = item[getkey[0]];
+        if (getkey !== undefined) {
+          returnText = getVal + restText;
+        }
+      }
+
+      return returnText
+
+    },
+    deleteData(item) {
+      const self = this;
+
+      self.deleteDialog.loader = true;
+
+      const val = item[self.deleteDialog.options.endpointVal];
+
+
+      self.$axios.delete(self.deleteDialog.options.endpoint + '/' + val,)
+        .then(res => {
+
+          setTimeout(() => {
+
+            self.deleteDialog.open = false
+            self.deleteDialog.loader = false;
+
+            // if click from detail modal
+            self.detailDialog.open = false
+
+            if (res.data.deletedId !== undefined) {
+              self.fetchData();
+              const succesText = self.getScopedVal(item, self.deleteDialog.options.successText)
+              self.$store.dispatch('openSnackbar', {
+                text: succesText
+              });
+            } else {
+              self.$store.dispatch('openSnackbar', {
+                text: 'Bir Hata oluştu',
+                type: 'error'
+              });
+            }
+
+
+          })
+
+        })
+    },
+    editRow(item) {
+      const self = this;
+      self.$router.push(self.moduleInfo.editRoute + item.id)
+    },
   }
+}
 </script>

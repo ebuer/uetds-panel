@@ -171,7 +171,7 @@
               </v-autocomplete>
             </div>
 
-            <div class="app-form-group">
+            <div class="app-form-group" v-if="form.transport_type_code_id !== 2">
               <v-autocomplete
                 class="app-form-item"
                 outlined
@@ -180,7 +180,7 @@
                 item-value="code"
                 :item-text="item => item.code +' - '+ item.title"
                 label="Un Kodu"
-                :rules="rules.requiredByNumb"
+                :rules="form.transport_type_code_id !== 2 ? rules.requiredByNumb : []"
               >
               </v-autocomplete>
             </div>

@@ -16,7 +16,6 @@ export const state = () => ({
 export const mutations = {
   SET_TOKEN(state, payload) {
     state.token = payload
-    console.log(state.token)
   },
   SET_MAIN_LOADER(state, payload) {
     state.mainLoader = payload
@@ -58,9 +57,6 @@ export const actions = {
 
     const text = payload.text !== undefined ? payload.text : '';
     const type = payload.type !== undefined ? payload.type : 'success';
-
-    console.log('text', text)
-    console.log('text', type)
 
     commit('SET_SNACKBAR', true)
     commit('SET_SNACK_BAR_SETTINGS', {
