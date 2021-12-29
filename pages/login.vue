@@ -377,5 +377,28 @@ export default {
     }
 
   }
+
+  @media only screen and (max-width: 700px) {
+     .login-content {
+      display: block;
+       .left {
+         position: absolute;
+         z-index: 1;
+         left: 0;
+         right: 0;
+         bottom: 0;
+         top: 0;
+         width: 100%;
+       }
+
+       .right {
+         width: 100%;
+         display: block;
+         position: relative;
+         z-index: 2;
+        padding: 200px 10px 0 10px;
+       }
+    }
+  }
 }
 </style>

@@ -27,7 +27,8 @@
           <v-col
             v-for="(item, i) in items"
             :key="i"
-            cols="4"
+            cols="12"
+            md="4"
           >
             <v-card
               :color="item.color"
@@ -81,7 +82,7 @@
         <br><br><br>
 
         <v-row justify="center" align="center">
-          <v-col cols="4">
+          <v-col cols="12" md="4">
             <v-card class="add-big-icon-btn" @click="goTo('/expeditions/add')">
               <div class="text-center">
                 <div>

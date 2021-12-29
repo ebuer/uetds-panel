@@ -65,16 +65,12 @@
       <!--      </v-btn>-->
       <v-toolbar-title v-text="title"/>
       <v-spacer/>
-      <v-btn icon>
-        <v-icon>mdi-magnify</v-icon>
-      </v-btn>
 
-      <v-btn icon>
-        <v-icon>mdi-heart</v-icon>
-      </v-btn>
+
 
       <!--    Notification Menu Start  -->
       <v-menu
+        v-if="!hideMenu"
         left
         bottom
         class="ml-2 mr-2"
@@ -268,6 +264,7 @@
         drawer: true,
         fixed: false,
         items: [],
+        hideMenu: true,
         adminItems: [
           {
             icon: 'mdi-apps',
@@ -320,7 +317,7 @@
         miniVariant: false,
         right: true,
         rightDrawer: false,
-        title: 'Logistic',
+        title: 'AFE Lojistik',
         userInfoStatus: null
       }
     },
@@ -396,4 +393,11 @@
   .app-table tbody tr {
     cursor: pointer !important;
   }
+
+  @media only screen and (max-width: 550px) {
+    .add-button {
+      width: 100% !important;
+    }
+  }
+
 </style>

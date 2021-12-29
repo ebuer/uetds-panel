@@ -11,15 +11,7 @@
       <div class="app-list">
         <v-card style="box-shadow: none; padding: 0">
           <v-card-title>
-            <v-text-field
-              v-model="table.search"
-              append-icon="mdi-magnify"
-              label="Arama"
-              single-line
-              hide-details
-            ></v-text-field>
-            <v-spacer></v-spacer>
-            <v-btn color="primary" dark class="mb-2" @click="$router.push(moduleInfo.createRoute)">
+            <v-btn color="primary" dark class="mb-2 add-button" @click="$router.push(moduleInfo.createRoute)">
               {{moduleInfo.createText}}
 
               <v-icon
@@ -29,6 +21,15 @@
                 mdi-plus
               </v-icon>
             </v-btn>
+            <v-spacer></v-spacer>
+
+            <v-text-field
+              v-model="table.search"
+              append-icon="mdi-magnify"
+              label="Arama"
+              single-line
+              hide-details
+            ></v-text-field>
           </v-card-title>
           <v-data-table
             :loading="table.loader"
