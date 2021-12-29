@@ -363,7 +363,7 @@ export default {
       validForm: false,
       loader: false,
       moduleInfo: {
-        title: 'Sevkiyat Ekle',
+        title: 'Sevkiyat Güncelle',
         titleShowVal: 'id',
         formEndpoint: 'expeditions/update',
         getByIdEndpoint: 'expeditions',
