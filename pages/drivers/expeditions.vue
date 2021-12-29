@@ -631,7 +631,7 @@ export default {
       const val = item[self.deleteDialog.options.endpointVal];
 
 
-      self.$axios.delete(self.deleteDialog.options.endpoint + '/' + val,)
+      self.$axios.delete(self.deleteDialog.options.endpoint + '/' + val)
         .then(res => {
 
           setTimeout(() => {
@@ -668,11 +668,13 @@ export default {
       const self = this;
       self.confirmDialog.selected = item;
 
-      Object.keys(self.confirmDialog.form).forEach(itemKey => {
-        const dataItem = item.load_detail[itemKey] !== undefined ? item.load_detail[itemKey] : item[itemKey]
-        if (dataItem) self.confirmDialog.form[itemKey] = dataItem;
-        self.$forceUpdate();
-      })
+
+      self.confirmDialog.form.expedition_start_date = item.expedition_service.expedition_start_date
+      self.confirmDialog.form.expedition_start_time = item.expedition_service.expedition_start_time
+      self.confirmDialog.form.expedition_end_date = item.expedition_service.expedition_end_date
+      self.confirmDialog.form.expedition_end_time = item.expedition_service.expedition_end_time
+      self.confirmDialog.form.load_quantity = item.expedition_service.load_detail.load_quantity
+      self.$forceUpdate();
 
       setTimeout(() => self.confirmDialog.open = true);
     },
