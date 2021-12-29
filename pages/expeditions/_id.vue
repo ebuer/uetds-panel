@@ -197,6 +197,7 @@
                   value="2"
                 ></v-radio>
                 <v-radio
+                  v-if="!disableRadio"
                   label="Sürücü Onay"
                   value="1"
                 ></v-radio>
@@ -213,34 +214,34 @@
 
 
             <div class="mt-10">
-<!--              <v-row>-->
-<!--                <v-col>-->
-<!--                  <div class="app-form-group">-->
-<!--                    <v-text-field-->
-<!--                      class="app-form-item"-->
-<!--                      outlined-->
-<!--                      v-model="form.filling_start_date"-->
-<!--                      :rules="form.sendTypeStatus === '2' ? rules.required : []"-->
-<!--                      label="Dolum Başlangıç Tarihi"-->
-<!--                      type="date"-->
-<!--                      required-->
-<!--                    ></v-text-field>-->
-<!--                  </div>-->
-<!--                </v-col>-->
-<!--                <v-col>-->
-<!--                  <div class="app-form-group">-->
-<!--                    <v-text-field-->
-<!--                      class="app-form-item"-->
-<!--                      outlined-->
-<!--                      v-model="form.filling_start_time"-->
-<!--                      :rules="form.sendTypeStatus === '2' ? rules.required : []"-->
-<!--                      label="Dolum Başlangıç Saati"-->
-<!--                      type="time"-->
-<!--                      required-->
-<!--                    ></v-text-field>-->
-<!--                  </div>-->
-<!--                </v-col>-->
-<!--              </v-row>-->
+              <!--              <v-row>-->
+              <!--                <v-col>-->
+              <!--                  <div class="app-form-group">-->
+              <!--                    <v-text-field-->
+              <!--                      class="app-form-item"-->
+              <!--                      outlined-->
+              <!--                      v-model="form.filling_start_date"-->
+              <!--                      :rules="form.sendTypeStatus === '2' ? rules.required : []"-->
+              <!--                      label="Dolum Başlangıç Tarihi"-->
+              <!--                      type="date"-->
+              <!--                      required-->
+              <!--                    ></v-text-field>-->
+              <!--                  </div>-->
+              <!--                </v-col>-->
+              <!--                <v-col>-->
+              <!--                  <div class="app-form-group">-->
+              <!--                    <v-text-field-->
+              <!--                      class="app-form-item"-->
+              <!--                      outlined-->
+              <!--                      v-model="form.filling_start_time"-->
+              <!--                      :rules="form.sendTypeStatus === '2' ? rules.required : []"-->
+              <!--                      label="Dolum Başlangıç Saati"-->
+              <!--                      type="time"-->
+              <!--                      required-->
+              <!--                    ></v-text-field>-->
+              <!--                  </div>-->
+              <!--                </v-col>-->
+              <!--              </v-row>-->
 
 
               <v-row>
@@ -323,7 +324,7 @@
                      color="primary"
                      :disabled="loader"
                      :loading="loader">
-                Kaydet
+                Güncelle
               </v-btn>
             </div>
 
@@ -350,230 +351,267 @@
 </template>
 
 <script>
-  export default {
-    name: 'expeditions-add',
-    data() {
-      return {
-        userInfoStatus: null,
-        ready: false,
-        submitting: false,
-        error: [],
-        validForm: false,
-        loader: false,
-        moduleInfo: {
-          title: 'Sevkiyat Ekle',
-          formEndpoint: 'expeditions/create',
-          routeAfterSuccess: '/expeditions',
-          successShowKey: 'car_id',
-          successShowText: '  numaralı kayıt eklenmiştir'
-        },
-        form: {
-          car_id: '', // required
-          trailer_id: '', // nullable
-          driver_id_1: '', // required
-          driver_id_2: '', // nullable
-          // filling_start_date: '', // required - format: dd/mm/yyyy
-          // filling_start_time: '', // required - format: HH/mm
-          expedition_start_date: '', // required - format: dd/mm/yyyy
-          expedition_start_time: '', // required - format: HH/mm
-          expedition_end_date: '', // required - format: dd/mm/yyyy
-          expedition_end_time: '', // required - format: HH/mm
-          transport_type_code_id: '', // required
-          sender_id: '', // required
-          customer_id: '', // required
-          load_type_id: '', // required
-          load_quantity_unit: '', // required
-          load_quantity: '', // required
-          dangerous_goods_transport_type_id: '',
-          unId: '120300', // required
-          sendTypeStatus: '2',
-        },
-        rules: {
-          required: [
-            v => !!v.trim() || 'Alan Zorunludur',
-          ],
-          requiredByNumb: [
-            v => !!v || 'Alan Zorunludur',
-          ],
-        },
-        selectItems: {
-          cars: [],
-          drivers: [],
-          trailers: [],
-          transportTypes: [],
-          senders: [],
-          customers: [],
-          loadTypes: [],
-          dangerousGoodsTransportTypes: [],
-          unNumbers: [],
-          loadQuantityUnits: [],
-          districtLoader: false
-        },
-      }
-    },
-    created() {
+export default {
+  name: 'expeditions-add',
+  data() {
+    return {
+      userInfoStatus: null,
+      disableRadio: true,
+      ready: false,
+      submitting: false,
+      error: [],
+      validForm: false,
+      loader: false,
+      moduleInfo: {
+        title: 'Sevkiyat Ekle',
+        titleShowVal: 'id',
+        formEndpoint: 'expeditions/update',
+        getByIdEndpoint: 'expeditions',
+        routeAfterSuccess: '/expeditions',
+        successShowKey: 'id',
+        successShowText: '  numaralı kayıt Güncellendi'
+      },
+      fetchedData: null,
+      form: {
+        car_id: '', // required
+        trailer_id: '', // nullable
+        driver_id_1: '', // required
+        driver_id_2: '', // nullable
+        // filling_start_date: '', // required - format: dd/mm/yyyy
+        // filling_start_time: '', // required - format: HH/mm
+        expedition_start_date: '', // required - format: dd/mm/yyyy
+        expedition_start_time: '', // required - format: HH/mm
+        expedition_end_date: '', // required - format: dd/mm/yyyy
+        expedition_end_time: '', // required - format: HH/mm
+        transport_type_code_id: '', // required
+        sender_id: '', // required
+        customer_id: '', // required
+        load_type_id: '', // required
+        load_quantity_unit: '', // required
+        load_quantity: '', // required
+        dangerous_goods_transport_type_id: '',
+        unId: '120300', // required
+        sendTypeStatus: '2',
+      },
+      rules: {
+        required: [
+          v => !!v.trim() || 'Alan Zorunludur',
+        ],
+        requiredByNumb: [
+          v => !!v || 'Alan Zorunludur',
+        ],
+      },
+      selectItems: {
+        cars: [],
+        drivers: [],
+        trailers: [],
+        transportTypes: [],
+        senders: [],
+        customers: [],
+        loadTypes: [],
+        dangerousGoodsTransportTypes: [],
+        unNumbers: [],
+        loadQuantityUnits: [],
+        districtLoader: false
+      },
+    }
+  },
+  created() {
+    const self = this;
+
+    if (self.$route.params.id === undefined) {
+      self.$router.push('/')
+    } else {
+      self.$axios.get(self.moduleInfo.getByIdEndpoint + '/' + self.$route.params.id)
+        .then(res => {
+          const data = res.data.data[0];
+          self.fetchedData = data;
+          self.moduleInfo.title = self.moduleInfo.title + ' - ' + data[self.moduleInfo.titleShowVal]
+
+          self.form.car_id = parseInt(data.car_id);
+          self.form.trailer_id = parseInt(data.trailer_id);
+          self.form.driver_id_1 = parseInt(data.driver_id_1);
+          self.form.driver_id_2 = parseInt(data.driver_id_2);
+          self.form.customer_id = parseInt(data.customer_id);
+          self.form.sender_id = parseInt(data.sender_id);
+          self.form.load_type_id = data.expedition_service.load_detail.load_type_id;
+          self.form.load_quantity_unit = data.expedition_service.load_detail.load_quantity_unit;
+          self.form.load_quantity = data.expedition_service.load_detail.load_quantity;
+          self.form.dangerous_goods_transport_type_id = data.expedition_service.load_detail.dangerous_goods_transport_type;
+          self.form.transport_type_code_id = parseInt(data.expedition_service.load_detail.transport_type_code);
+          self.form.unId = data.expedition_service.load_detail.unId;
+          self.form.sendTypeStatus = data.expedition_service.sendTypeStatus;
+          self.form.expedition_start_date = data.expedition_service.expedition_start_date;
+          self.form.expedition_start_time = data.expedition_service.expedition_start_time;
+          self.form.expedition_end_date = data.expedition_service.expedition_end_date;
+          self.form.expedition_end_time = data.expedition_service.expedition_end_time;
+
+          if(data.expedition_service.isSendService === '0' && data.expedition_service.sendTypeStatus === '1') self.disableRadio = false;
+
+          self.$forceUpdate();
+          // console.log('form', self.form)
+          self.getLoader = false
+        })
+    }
+
+
+
+    self.$axios.post('check-user-information')
+      .then(statusRes => {
+
+        const statusData = statusRes.data.status;
+
+        this.userInfoStatus = statusData
+
+        if (statusData === 0) {
+          setTimeout(() => self.ready = true)
+        } else {
+
+          self.$axios.all([
+            self.$axios.get('cars'),
+            self.$axios.get('trailers'),
+            self.$axios.get('drivers'),
+            self.$axios.post('transport-types'),
+            self.$axios.get('senders'),
+            self.$axios.get('customers'),
+            self.$axios.post('load-types'),
+            self.$axios.post('dangerous-goods-transport-types'),
+            self.$axios.post('un-numbers'),
+            self.$axios.post('load-unit-types'),
+          ]).then(res => {
+            // console.log('all', res)
+            self.selectItems.cars = res[0].data.data;
+            self.selectItems.trailers = res[1].data.data;
+            self.selectItems.drivers = res[2].data.data;
+            self.selectItems.transportTypes = res[3].data.data;
+            self.selectItems.senders = res[4].data.data;
+            self.selectItems.customers = res[5].data.data;
+            self.selectItems.loadTypes = res[6].data.data;
+            self.selectItems.dangerousGoodsTransportTypes = res[7].data.data;
+            self.selectItems.unNumbers = res[8].data.data;
+            self.selectItems.loadQuantityUnits = res[9].data.data;
+
+            setTimeout(() => self.ready = true)
+          })
+
+
+        }
+
+
+      })
+
+
+    // districts/{provinceID} - POST // İlçeler
+
+  },
+  methods: {
+    getUnitText(val) {
       const self = this;
 
-      // TODO base_url/get-all-data => GET
+      const findItem = self.selectItems.loadQuantityUnits.find(x => x.code === val);
 
-      self.$axios.post('check-user-information')
-        .then(statusRes => {
-
-          // Eksiksiz ise status : 1 -> form doldurabilir
-          // Eksik ise status : 0 -> formU dolduramaz
-
-          const statusData = statusRes.data.status;
-
-          this.userInfoStatus = statusData
-
-          if (statusData === 0) {
-            setTimeout(() => self.ready = true)
-          } else {
-
-            self.$axios.all([
-              self.$axios.get('cars'),
-              self.$axios.get('trailers'),
-              self.$axios.get('drivers'),
-              self.$axios.post('transport-types'),
-              self.$axios.get('senders'),
-              self.$axios.get('customers'),
-              self.$axios.post('load-types'),
-              self.$axios.post('dangerous-goods-transport-types'),
-              self.$axios.post('un-numbers'),
-              self.$axios.post('load-unit-types'),
-            ]).then(res => {
-              console.log('all', res)
-              self.selectItems.cars = res[0].data.data;
-              self.selectItems.trailers = res[1].data.data;
-              self.selectItems.drivers = res[2].data.data;
-              self.selectItems.transportTypes = res[3].data.data;
-              self.selectItems.senders = res[4].data.data;
-              self.selectItems.customers = res[5].data.data;
-              self.selectItems.loadTypes = res[6].data.data;
-              self.selectItems.dangerousGoodsTransportTypes = res[7].data.data;
-              self.selectItems.unNumbers = res[8].data.data;
-              self.selectItems.loadQuantityUnits = res[9].data.data;
-
-              setTimeout(() => self.ready = true)
-            })
-
-
-          }
-
-
-        })
-
-
-      // districts/{provinceID} - POST // İlçeler
-
+      return findItem ? '(' + findItem['description'] + ')' : ''
     },
-    methods: {
-      getUnitText(val) {
-        const self = this;
+    openPicker() {
+      this.$refs['picker'].initPicker()
+    },
+    resetError() {
+      const self = this;
+      self.error = [];
+    },
+    submit() {
+      const self = this;
 
-        const findItem = self.selectItems.loadQuantityUnits.find(x => x.code === val);
+      if (!self.submitting) {
 
-        return findItem ? '(' + findItem['description'] + ')' : ''
-      },
-      openPicker() {
-        this.$refs['picker'].initPicker()
-      },
-      resetError() {
-        const self = this;
-        self.error = [];
-      },
-      submit() {
-        const self = this;
-
-        if (!self.submitting) {
-
-          self.resetError()
+        self.resetError()
 
 
-          const valid = this.$refs.pageForm.validate();
+        const valid = this.$refs.pageForm.validate();
 
-          if (valid) {
-            self.submitting = true;
-            self.loader = true;
+        if (valid) {
+          self.submitting = true;
+          self.loader = true;
 
 
-            const finalObj = {};
+          const finalObj = {};
 
-            Object.keys(self.form).forEach(itemKey => {
+          Object.keys(self.form).forEach(itemKey => {
 
-              // if(itemKey === 'unId' ||
-              //   itemKey === 'load_quantity' ||
-              //   itemKey === 'dangerous_goods_transport_type_id' ||
-              //   itemKey === 'sendTypeStatus' ||
-              // itemKey === 'load_type_id') self.form[itemKey] = parseInt(self.form[itemKey])
+            // if(itemKey === 'unId' ||
+            //   itemKey === 'load_quantity' ||
+            //   itemKey === 'dangerous_goods_transport_type_id' ||
+            //   itemKey === 'sendTypeStatus' ||
+            // itemKey === 'load_type_id') self.form[itemKey] = parseInt(self.form[itemKey])
 
-              let status = true;
+            let status = true;
 
-              if (itemKey === 'dangerous_goods_transport_type_id' && (self.form.transport_type_code_id !== 1)) status = false;
+            if (itemKey === 'dangerous_goods_transport_type_id' && (self.form.transport_type_code_id !== 1)) status = false;
 
-              if (itemKey === 'driver_id_2' && (self.form.driver_id_2 === '')) status = false;
+            if (itemKey === 'driver_id_2' && (self.form.driver_id_2 === '')) status = false;
 
-              if (status) finalObj[itemKey] = self.form[itemKey];
+            if (status) finalObj[itemKey] = self.form[itemKey];
+          })
+
+          // transport_type_code_id
+
+          self.$axios.put(self.moduleInfo.formEndpoint + '/' + self.fetchedData.id, finalObj)
+            .then(res => {
+
+              const errors = res.data.error
+              if (errors !== undefined) {
+                Object.keys(errors).forEach(item => {
+                  self.error.push(errors[item][0])
+                })
+              } else {
+
+                if (res.data.updatedId !== undefined) {
+
+                  self.$store.dispatch('openSnackbar', {
+                    // text: self.form[self.moduleInfo.successShowKey] + self.moduleInfo.successShowText
+                    text: self.fetchedData[self.moduleInfo.successShowKey] + self.moduleInfo.successShowText
+                  });
+
+                  setTimeout(() => {
+                    self.$router.push(self.moduleInfo.routeAfterSuccess)
+                  })
+                } else {
+                  console.log('dddd', res)
+                  if(res.data.result !== undefined) {
+                    self.error.push(res.data.result)
+                  }else {
+                    self.error.push('Bilgileriniz kontrol edin.')
+                  }
+
+                  self.loader = false;
+                }
+
+              }
+
+              self.loader = false;
+              setTimeout(() => self.submitting = false, 500)
+
             })
-
-            // transport_type_code_id
-
-            self.$axios.post(self.moduleInfo.formEndpoint, finalObj)
-              .then(res => {
-
-                const errors = res.data.error
+            .catch(err => {
+              if (err.response !== undefined) {
+                const errors = err.response.data.errors
                 if (errors !== undefined) {
                   Object.keys(errors).forEach(item => {
                     self.error.push(errors[item][0])
                   })
-                } else {
-
-                  if (res.data.createdId !== undefined) {
-
-                    self.$store.dispatch('openSnackbar', {
-                      text: res.data.createdId + self.moduleInfo.successShowText
-                    });
-
-                    setTimeout(() => {
-                      self.$router.push(self.moduleInfo.routeAfterSuccess)
-                    })
-                  } else {
-                    console.log('dddd', res)
-                    if(res.data.result !== undefined) {
-                      self.error.push(res.data.result)
-                    }else {
-                      self.error.push('Bilgileriniz kontrol edin.')
-                    }
-
-                    self.loader = false;
-                  }
-
                 }
-
-                self.loader = false;
-                setTimeout(() => self.submitting = false, 500)
-
-              })
-              .catch(err => {
-                if (err.response !== undefined) {
-                  const errors = err.response.data.errors
-                  if (errors !== undefined) {
-                    Object.keys(errors).forEach(item => {
-                      self.error.push(errors[item][0])
-                    })
-                  }
-                } else {
-                  self.error.push('Bilgileriniz kontrol edin.')
-                }
-                self.loader = false;
-                self.submitting = false
-              })
-
-          }
+              } else {
+                self.error.push('Bilgileriniz kontrol edin.')
+              }
+              self.loader = false;
+              self.submitting = false
+            })
 
         }
 
       }
+
     }
   }
+}
 </script>

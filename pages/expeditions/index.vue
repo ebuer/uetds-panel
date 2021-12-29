@@ -46,11 +46,11 @@
 
 
             <template v-slot:item.sendTypeStatus="{ item }">
-              <span v-if="item.isSendService === '0'">
-                <span v-if="item.sendTypeStatus === '1'">Sürücü Onayı Bekleniyor</span>
+              <span v-if="item.expedition_service.isSendService === '0'">
+                <span v-if="item.expedition_service.sendTypeStatus === '1'">Sürücü Onayı Bekleniyor</span>
                 <span v-else>Bildirilmedi</span>
               </span>
-              <span v-else-if="item.isSendService === '1'">Bildirildi</span>
+              <span v-else-if="item.expedition_service.isSendService === '1'">Bildirildi</span>
             </template>
 
             <template v-slot:item.action="{ item }">
@@ -109,7 +109,7 @@
                       dark
                       x-small
                       color="gray"
-                      :href="'http://test.gold-trace.com/uploads/'+ item.seferId +'.pdf'"
+                      :href="pdfBase + item.pdf_name"
                       target="_blank"
                     >
                       <v-icon dark>
@@ -156,7 +156,8 @@
                 :key="index"
               >
                 <td>{{ item.title }}</td>
-                <td>{{ detailDialog.item[item.value] }}</td>
+                <td v-if="item.callback !== undefined">{{ item.callback(detailDialog.item) }}</td>
+                <td v-else>{{ detailDialog.item[item.value] }}</td>
               </tr>
               </tbody>
             </template>
@@ -258,11 +259,12 @@ export default {
   name: 'drivers',
   data() {
     return {
+      pdfBase: process.env.PDF_BASE,
       moduleInfo: {
-        title: 'Seferler',
+        title: 'Sevkiyat',
         createRoute: '/expeditions/add',
         editRoute: '/expeditions/',
-        createText: 'Sefer Oluştur'
+        createText: 'Sevkiyat Oluştur'
       },
       deleteDialog: {
         open: false,
@@ -272,9 +274,9 @@ export default {
           endpoint: 'expeditions/delete',
           endpointVal: 'id',
           title: 'Silme İşlemi',
-          text: '{id} Nolu Seferi Silmek istediğinize emin misiniz?',
+          text: '{id} Nolu Sevkiyat Silmek istediğinize emin misiniz?',
           showText: '',
-          successText: '{id} Nolu Sefer Silinmiştir',
+          successText: '{id} Nolu Sevkiyat Silinmiştir',
         }
       },
       detailDialog: {
@@ -286,27 +288,33 @@ export default {
           },
           {
             title: 'Sürücü',
-            value: 'driver_1'
+            // value: 'driver_1',
+            callback: (item => item.driver_1.name_surname)
           },
           {
             title: '2.Sürücü',
-            value: 'driver_2'
+            // value: 'driver_2',
+            callback: (item => item.driver_2.name_surname !== undefined ? item.driver_2.name_surname : '')
           },
           {
-            title: 'Sefer Başlangıç Tarihi',
-            value: 'expedition_start_date'
+            title: 'Sevkiyat Başlangıç Tarihi',
+            // value: 'expedition_start_date',
+            callback: (item => item.expedition_service.expedition_start_date)
           },
           {
-            title: 'Sefer Başlangıç Saati',
-            value: 'expedition_start_time'
+            title: 'Sevkiyat Başlangıç Saati',
+            // value: 'expedition_start_time',
+            callback: (item => item.expedition_service.expedition_start_time)
           },
           {
-            title: 'Sefer Bitiş Tarihi',
-            value: 'expedition_end_date'
+            title: 'Sevkiyat Bitiş Tarihi',
+            // value: 'expedition_end_date',
+            callback: (item => item.expedition_service.expedition_end_date)
           },
           {
-            title: 'Sefer Bitiş Saati',
-            value: 'expedition_end_time'
+            title: 'Sevkiyat Bitiş Saati',
+            // value: 'expedition_service.expedition_end_time',
+            callback: (item => item.expedition_service.expedition_end_time)
           },
         ],
         item: null
@@ -324,9 +332,9 @@ export default {
           {text: 'Aksiyon', value: 'action', width: '15%'},
           {text: 'No', value: 'id'},
           {text: 'Durum', value: 'sendTypeStatus'},
-          {text: 'Sürücü', value: 'driver_1'},
-          {text: 'Plaka', value: 'plaque_1'},
-          {text: 'Sefer Bitiş', value: 'expedition_end_date'},
+          {text: 'Sürücü', value: 'driver_1.name_surname'},
+          {text: 'Plaka', value: 'car.plaque'},
+          {text: 'Sevkiyat Bitiş', value: 'expedition_service.expedition_end_date'},
         ],
         items: []
       },

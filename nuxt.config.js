@@ -51,7 +51,10 @@ export default {
   pageTransition: {
     name: 'layout',
   },
-
+  env: {
+    baseURL: process.env.baseURL,
+    PDF_BASE: process.env.PDF_BASE
+  },
   axios: {
     baseURL:process.env.baseURL || 'http://test.gold-trace.com',
     redirectError: {

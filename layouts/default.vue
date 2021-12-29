@@ -301,7 +301,7 @@
           },
           {
             icon: 'mdi-map-check',
-            title: 'Seferler',
+            title: 'Sevkiyat',
             to: '/expeditions'
           }
         ],
@@ -313,7 +313,7 @@
           // },
           {
             icon: 'mdi-map-check',
-            title: 'Seferler',
+            title: 'Sevkiyat',
             to: '/drivers/expeditions'
           }
         ],

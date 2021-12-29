@@ -168,7 +168,8 @@
                 :key="index"
               >
                 <td>{{ item.title }}</td>
-                <td>{{ detailDialog.item[item.value] }}</td>
+                <td v-if="item.callback !== undefined">{{ item.callback(detailDialog.item) }}</td>
+                <td v-else>{{ detailDialog.item[item.value] }}</td>
               </tr>
               </tbody>
             </template>
@@ -329,7 +330,7 @@
               <!--                </v-col>-->
               <!--              </v-row>-->
 
-              <v-form class="app-form" v-model="confirmDialog.validForm"
+              <v-form v-if="confirmDialog.selected !== null && confirmDialog.selected !== ''" class="app-form" v-model="confirmDialog.validForm"
                       ref="pageForm">
                 <v-row>
                   <v-col>
@@ -397,10 +398,9 @@
                         outlined
                         v-model="confirmDialog.form.load_quantity"
                         :rules="rules.required"
-                        label="Yük Miktarı"
+                        :label="'Yük Miktarı (' + confirmDialog.selected.load_detail.load_unit.description + ')'"
                         type="number"
                       ></v-text-field>
-<!--                      TODO yük m,ktarı yanına Litre vs olacak (backend den gelecek)-->
                     </div>
                   </v-col>
                 </v-row>
@@ -464,27 +464,33 @@ export default {
           },
           {
             title: 'Sürücü',
-            value: 'driver_1'
+            // value: 'driver_1',
+            callback: (item => item.driver_1.name_surname)
           },
           {
             title: '2.Sürücü',
-            value: 'driver_2'
+            // value: 'driver_2',
+            callback: (item => item.driver_2.name_surname !== undefined ? item.driver_2.name_surname : '')
           },
           {
-            title: 'Sefer Başlangıç Tarihi',
-            value: 'expedition_start_date'
+            title: 'Sevkiyat Başlangıç Tarihi',
+            // value: 'expedition_start_date',
+            callback: (item => item.expedition_service.expedition_start_date)
           },
           {
-            title: 'Sefer Başlangıç Saati',
-            value: 'expedition_start_time'
+            title: 'Sevkiyat Başlangıç Saati',
+            // value: 'expedition_start_time',
+            callback: (item => item.expedition_service.expedition_start_time)
           },
           {
-            title: 'Sefer Bitiş Tarihi',
-            value: 'expedition_end_date'
+            title: 'Sevkiyat Bitiş Tarihi',
+            // value: 'expedition_end_date',
+            callback: (item => item.expedition_service.expedition_end_date)
           },
           {
-            title: 'Sefer Bitiş Saati',
-            value: 'expedition_end_time'
+            title: 'Sevkiyat Bitiş Saati',
+            // value: 'expedition_service.expedition_end_time',
+            callback: (item => item.expedition_service.expedition_end_time)
           },
         ],
         item: null
@@ -660,8 +666,6 @@ export default {
     },
     openConfirmForm(item) {
       const self = this;
-      console.log('ooo', self.confirmDialog.form)
-      console.log('iii', item)
       self.confirmDialog.selected = item;
 
       Object.keys(self.confirmDialog.form).forEach(itemKey => {
