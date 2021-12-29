@@ -692,7 +692,7 @@ export default {
       self.confirmDialog.loader = true;
       self.$axios.$put('driver/expedition/' + id, self.confirmDialog.form)
         .then(res => {
-          console.log('RRRR', res)
+          // console.log('RRRR', res)
 
           if (res.status) {
 
