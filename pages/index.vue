@@ -113,6 +113,15 @@
         isReady: false,
         items: [
           {
+            color: '#1d29cc',
+            src: 'https://cdn.vuetifyjs.com/images/cards/halcyon.png',
+            icon: 'mdi-map-check',
+            title: 'Sevkiyatlar',
+            count: '0',
+            toList: '/expeditions',
+            toAdd: '/expeditions/add'
+          },
+          {
             color: '#1F7087',
             src: 'https://cdn.vuetifyjs.com/images/cards/foster.jpg',
             title: 'Araçlar',
@@ -161,9 +170,10 @@
       this.$axios.get('get-statistics')
         .then(res => {
           const data = res.data;
-          self.items[0].count = data['Total Cars'];
-          self.items[1].count = data['Total Customers'];
-          self.items[2].count = data['Total Drivers'];
+          self.items[0].count = data['Total Expeditions'];
+          self.items[1].count = data['Total Cars'];
+          self.items[2].count = data['Total Customers'];
+          self.items[3].count = data['Total Drivers'];
         })
     },
     methods: {

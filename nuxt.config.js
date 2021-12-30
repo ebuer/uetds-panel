@@ -8,19 +8,38 @@ export default {
   ssr: false,
   // Global page headers: https://go.nuxtjs.dev/config-head
   head: {
-    titleTemplate: '%s - uetds-panel',
-    title: 'uetds-panel',
+    titleTemplate: '%s - Yük Bildirimi',
+    title: 'AFE U-ETDS',
     htmlAttrs: {
       lang: 'en'
     },
     meta: [
       { charset: 'utf-8' },
       { name: 'viewport', content: 'width=device-width, initial-scale=1' },
-      { hid: 'description', name: 'description', content: '' },
-      { name: 'format-detection', content: 'telephone=no' }
+      { name: 'format-detection', content: 'telephone=no' },
+      {hid: 'author', name: 'author', content: 'AFE'},
+      {hid: 'description', name: 'description', content: "AFE U-ETDS - Yük Bildirimi"},
+      {hid: 'keywords', name: 'keywords', content: 'UETDS,Yuk,Bildirim,lojistik,tehlikeli'},
+      {hid: 'og:site_name', name: 'og:site_name', content: 'AFE UETDS'},
+      {hid: 'og:site', name: 'og:site', content: 'http://afeyukbildir.com'},
+      {hid: 'og:title', name: 'og:title', content: "afeyukbildir"},
+      {hid: 'og:description', name: 'og:description', content: "AFE U-ETDS - Yük Bildirimi"},
+      {hid: 'og:image', name: 'og:image', content: 'http://afeyukbildir.com'},
+      {hid: 'og:url', name: 'og:url', content: 'http://afeyukbildir.com'},
+      // {hid: 'og:type', name: 'og:type', content: 'article'},
+      {name: 'format-detection', content: 'telephone=no'},
+      {name: 'twitter:card', content: 'summary_large_image'},
+      {name: 'twitter:site', content: '@afeyukbildir'},
+      {name: 'twitter:domain', content: 'afeyukbildir.com'},
+      {name: 'twitter:title', content: "afeyukbildir"},
+      {name: 'twitter:description', content: "AFE U-ETDS - Yük Bildirimi"},
+      {name: 'twitter:image', content: "https://www.afeyukbildir.com"},
     ],
     link: [
-      { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }
+      {rel: 'icon', type: 'image/x-icon', href: '/favicon.ico'},
+      {rel: 'apple-touch-icon', sizes: "180x180", href: '/apple-touch-icon.png'},
+      {rel: 'icon', type: 'image/x-icon', sizes: "32x32", href: '/favicon-32x32.png'},
+      {rel: 'icon', type: 'image/x-icon', sizes: "16x16", href: '/favicon-16x16.png'},
     ]
   },
 

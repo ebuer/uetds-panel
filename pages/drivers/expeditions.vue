@@ -398,7 +398,7 @@
                         outlined
                         v-model="confirmDialog.form.load_quantity"
                         :rules="rules.required"
-                        :label="'Yük Miktarı (' + confirmDialog.selected.load_detail.load_unit.description + ')'"
+                        :label="'Yük Miktarı (' + confirmDialog.selected.expedition_service.load_detail.load_unit.description + ')'"
                         type="number"
                       ></v-text-field>
                     </div>
@@ -463,14 +463,9 @@ export default {
             value: 'id'
           },
           {
-            title: 'Sürücü',
+            title: 'Sürücü TC',
             // value: 'driver_1',
-            callback: (item => item.driver_1.name_surname)
-          },
-          {
-            title: '2.Sürücü',
-            // value: 'driver_2',
-            callback: (item => item.driver_2.name_surname !== undefined ? item.driver_2.name_surname : '')
+            callback: (item => item.expedition_service.driver_1)
           },
           {
             title: 'Sevkiyat Başlangıç Tarihi',
@@ -508,9 +503,9 @@ export default {
         headers: [
           // {text: 'Aksiyon', value: 'action', width: '15%'},
           {text: 'No', value: 'id'},
-          {text: 'Sürücü', value: 'driver_1'},
-          {text: 'Plaka', value: 'plaque_1'},
-          {text: 'Sefer Bitiş', value: 'expedition_end_date'},
+          {text: 'Sürücü TC', value: 'expedition_service.driver_1'},
+          {text: 'Plaka', value: 'expedition_service.plaque_1'},
+          {text: 'Sefer Bitiş', value: 'expedition_service.expedition_end_date'},
         ],
         items: []
       },
@@ -526,9 +521,9 @@ export default {
         headers: [
           {text: 'Aksiyon', value: 'action', width: '15%'},
           {text: 'No', value: 'id'},
-          {text: 'Sürücü', value: 'driver_1'},
-          {text: 'Plaka', value: 'plaque_1'},
-          {text: 'Sefer Bitiş', value: 'expedition_end_date'},
+          {text: 'Sürücü TC', value: 'expedition_service.driver_1'},
+          {text: 'Plaka', value: 'expedition_service.plaque_1'},
+          {text: 'Sefer Bitiş', value: 'expedition_service.expedition_end_date'},
         ],
         items: []
       },
@@ -668,15 +663,17 @@ export default {
       const self = this;
       self.confirmDialog.selected = item;
 
-
-      self.confirmDialog.form.expedition_start_date = item.expedition_service.expedition_start_date
-      self.confirmDialog.form.expedition_start_time = item.expedition_service.expedition_start_time
-      self.confirmDialog.form.expedition_end_date = item.expedition_service.expedition_end_date
-      self.confirmDialog.form.expedition_end_time = item.expedition_service.expedition_end_time
-      self.confirmDialog.form.load_quantity = item.expedition_service.load_detail.load_quantity
+      self.confirmDialog.form.expedition_start_date = self.checkNull(item.expedition_service.expedition_start_date)
+      self.confirmDialog.form.expedition_start_time = self.checkNull(item.expedition_service.expedition_start_time)
+      self.confirmDialog.form.expedition_end_date = self.checkNull(item.expedition_service.expedition_end_date)
+      self.confirmDialog.form.expedition_end_time = self.checkNull(item.expedition_service.expedition_end_time)
+      self.confirmDialog.form.load_quantity = self.checkNull(item.expedition_service.load_detail.load_quantity)
       self.$forceUpdate();
 
       setTimeout(() => self.confirmDialog.open = true);
+    },
+    checkNull(val) {
+      return typeof val === 'string' ? val : ''
     },
     saveConfirmForm() {
       const self = this;

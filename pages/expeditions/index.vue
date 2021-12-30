@@ -103,7 +103,7 @@
                   <span>Düzenle</span>
                 </v-tooltip>
 
-                <v-tooltip top v-if="item.isSendService === '1'">
+                <v-tooltip top v-if="item.expedition_service.isSendService === '1'">
                   <template v-slot:activator="{ on, attrs }">
                     <v-btn
                       v-bind="attrs"
@@ -113,7 +113,7 @@
                       dark
                       x-small
                       color="gray"
-                      :href="pdfBase + item.pdf_name"
+                      :href="pdfBase + item.expedition_service.pdf_name"
                       target="_blank"
                     >
                       <v-icon dark>
