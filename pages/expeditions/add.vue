@@ -442,7 +442,7 @@
               self.$axios.post('un-numbers'),
               self.$axios.post('load-unit-types'),
             ]).then(res => {
-              console.log('all', res)
+              // console.log('all', res)
               self.selectItems.cars = res[0].data.data;
               self.selectItems.trailers = res[1].data.data;
               self.selectItems.drivers = res[2].data.data;
@@ -538,10 +538,18 @@
                       self.$router.push(self.moduleInfo.routeAfterSuccess)
                     })
                   } else {
-                    console.log('dddd', res)
-                    if(res.data.result !== undefined) {
-                      self.error.push(res.data.result)
-                    }else {
+                    try {
+                      if(res.data.result !== undefined) {
+                        if(typeof res.data.result === "string") {
+                          self.error.push(res.data.result)
+                        }else {
+                          self.error.push(res.data.result.message)
+                        }
+
+                      }else {
+                        self.error.push('Bilgileriniz kontrol edin.')
+                      }
+                    }catch (e) {
                       self.error.push('Bilgileriniz kontrol edin.')
                     }
 

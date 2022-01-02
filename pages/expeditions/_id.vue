@@ -576,10 +576,18 @@ export default {
                     self.$router.push(self.moduleInfo.routeAfterSuccess)
                   })
                 } else {
-                  console.log('dddd', res)
-                  if(res.data.result !== undefined) {
-                    self.error.push(res.data.result)
-                  }else {
+                  try {
+                    if(res.data.result !== undefined) {
+                      if(typeof res.data.result === "string") {
+                        self.error.push(res.data.result)
+                      }else {
+                        self.error.push(res.data.result.message)
+                      }
+
+                    }else {
+                      self.error.push('Bilgileriniz kontrol edin.')
+                    }
+                  }catch (e) {
                     self.error.push('Bilgileriniz kontrol edin.')
                   }
 
