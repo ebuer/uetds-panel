@@ -207,13 +207,13 @@ export default {
         // v => /.+@.+/.test(v) || 'Geçerli E-posta giriniz',
       ],
       loginForm: {
-        email: 'test@test.com',
-        password: 'test123',
+        email: '',
+        password: '',
       },
       registerForm: {
-        email: 'test1@testuetds.com',
-        password: '1234',
-        name: 'test',
+        email: '',
+        password: '',
+        name: '',
       },
       loginSubmitting: false,
       registerSubmitting: false,

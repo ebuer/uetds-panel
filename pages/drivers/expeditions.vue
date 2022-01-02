@@ -188,6 +188,7 @@
           <!--          </v-btn>-->
 
           <v-btn
+            v-if="enableConfirmBtn"
             color="primary"
             text
             @click="openConfirmForm(detailDialog.item)"
@@ -435,6 +436,7 @@ export default {
   name: 'drivers',
   data() {
     return {
+      enableConfirmBtn: false,
       tab: '',
       moduleInfo: {
         title: 'Seferlerlerim',
@@ -587,8 +589,17 @@ export default {
     },
     clickRow(item) {
       const self = this;
+      self.enableConfirmBtn = self.checkForBtn(item);
       self.detailDialog.item = item
       setTimeout(() => self.detailDialog.open = true)
+    },
+    checkForBtn(item) {
+      let status = false;
+      if(item.expedition_service !== null && item.expedition_service !== undefined){
+        if(item.expedition_service.isSendService === '0' && item.expedition_service.sendTypeStatus === '1') status = true;
+      }
+
+      return status
     },
     deleteRow(item) {
       const self = this;
